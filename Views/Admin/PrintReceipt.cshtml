@@ -1,0 +1,47 @@
+﻿@model TeamTaskManager.Models.Payment
+@using TeamTaskManager.Extensions
+
+<div class="container mt-5" style="max-width: 700px;">
+    <div class="border p-4 rounded shadow-sm">
+        <h4 class="text-center mb-4 text-success">🧾 رسید پرداخت</h4>
+        <table class="table table-bordered text-end">
+            <tbody>
+                <tr>
+                    <th>کاربر</th>
+                    <td>@Model.UserName</td>
+                </tr>
+                <tr>
+                    <th>برای</th>
+                    <td>@Model.PaymentFor</td>
+                </tr>
+                <tr>
+                    <th>مبلغ</th>
+                    <td>@Model.Amount.ToString("N0") تومان</td>
+                </tr>
+                <tr>
+                    <th>تاریخ پرداخت</th>
+                    <td>@Model.PaymentDate.ToShamsi(true)</td>
+                </tr>
+                <tr>
+                    <th>وضعیت</th>
+                    <td> @switch (Model.Status)
+                    {
+                        case "پرداخت موفق":
+                        case "PAID":<span class="badge bg-success">پرداخت موفق</span> break;
+                        case "ناموفق":
+                        case "FAILED": <span class="badge bg-danger">ناموفق</span> break;
+                        case "برگشت‌خورده":
+                        case "REFUNDED": <span class="badge bg-warning text-dark">برگشت‌خورده</span> break;
+                        case "لغو شده توسط کاربر": <span class="badge bg-secondary">لغو شده توسط کاربر</span> break;
+                        default: <span class="badge bg-secondary">@Model.Status</span>break;
+                } </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="text-center mt-4">
+            <a href="javascript:window.print()" class="btn btn-outline-primary">🖨 چاپ این رسید</a>
+            <a asp-action="PaymentsList" asp-controller="Admin" class="btn btn-secondary ms-2">🔙 بازگشت</a>
+        </div>
+    </div>
+</div>

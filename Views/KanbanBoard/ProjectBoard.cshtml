@@ -1,0 +1,178 @@
+﻿@{
+    ViewData["Title"] = "بورد کانبان - " + ViewBag.ProjectTitle;
+    var groupedTasks = ViewBag.GroupedTasks as Dictionary<string, List<TeamTaskManager.Models.TaskItem>>;
+    var projectId = (int)ViewBag.ProjectId;
+}
+
+<style>
+    .kanban-wrapper {
+        border: 2px solid #198754;
+        border-radius: 16px;
+        padding: 25px;
+        background: #f8fdf8;
+        max-width: 880px;
+        margin: 40px auto 80px auto;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .kanban-board {
+        display: flex;
+        gap: 20px;
+        overflow-x: auto;
+        padding: 10px 0;
+    }
+
+    .kanban-column {
+        background: #e9f5e9;
+        padding: 15px;
+        width: 280px;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        flex-shrink: 0;
+    }
+
+    .kanban-task {
+        background: #fff;
+        padding: 10px;
+        margin-bottom: 12px;
+        border: 1px solid #c3e6cb;
+        border-radius: 8px;
+        transition: box-shadow 0.3s;
+    }
+
+        .kanban-task:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+    .kanban-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 25px;
+    }
+
+    .btn-action {
+        margin-left: 6px;
+        margin-top: 6px;
+    }
+
+    .task-actions a,
+    .task-actions form {
+        display: inline-block;
+    }
+
+    .task-actions button,
+    .task-actions a {
+        font-size: 16px;
+    }
+</style>
+
+<div class="kanban-wrapper">
+
+    <div class="kanban-header">
+        <h4 class="text-success mb-2">@ViewData["Title"]</h4>
+        <div>
+            <a asp-action="Index" asp-controller="Orders" class="btn btn-outline-secondary btn-sm btn-action">⬅️ بازگشت</a>
+            <a asp-action="ProjectSettings" asp-controller="KanbanBoard" asp-route-projectId="@projectId" class="btn btn-outline-success btn-sm btn-action">
+                ⚙️ تنظیمات
+            </a>
+            <a asp-action="Report" asp-controller="KanbanBoard" asp-route-projectId="@projectId" class="btn btn-outline-info btn-sm btn-action">
+                📊 گزارش‌گیری
+            </a>
+
+        </div>
+    </div>
+
+    <!-- فرم افزودن وظیفه -->
+    <form asp-action="AddTask" asp-controller="KanbanBoard" method="post" class="mb-4">
+        <input type="hidden" name="ProjectId" value="@projectId" />
+
+        <div class="row g-2 align-items-end">
+            <div class="col">
+                <label>عنوان:</label>
+                <input name="Title" class="form-control" required />
+            </div>
+            <div class="col">
+                <label>توضیح:</label>
+                <input name="Description" class="form-control" />
+            </div>
+            <div class="col">
+                <label>ستون:</label>
+                <select name="ColumnName" class="form-select">
+                    <option value="To Do">To Do</option>
+                    <option value="Doing">Doing</option>
+                    <option value="Done">Done</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-success">➕ افزودن وظیفه</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- نمایش کانبان بورد -->
+    @if (groupedTasks == null || !groupedTasks.Any())
+    {
+        <div class="alert alert-warning">⚠️ وظیفه‌ای برای نمایش در بورد ثبت نشده است.</div>
+    }
+    else
+    {
+        <div class="kanban-board">
+            @foreach (var column in groupedTasks.Keys)
+            {
+                <div class="kanban-column">
+                    <h5 class="text-success fw-bold text-center mb-3">@column</h5>
+                    <div class="kanban-tasks">
+                        @foreach (var task in groupedTasks[column])
+                        {
+                            <div class="kanban-task d-flex justify-content-between align-items-start" data-id="@task.Id">
+                                <div>
+                                    <strong>@task.Title</strong><br />
+                                    <small class="text-muted">@task.Description</small>
+                                </div>
+                                <div class="d-flex flex-column align-items-end gap-1 task-actions">
+                                    <a asp-action="EditTask" asp-controller="KanbanBoard" asp-route-id="@task.Id" class="btn btn-sm btn-link text-primary p-0">📝</a>
+                                    <form asp-action="DeleteTask" asp-controller="KanbanBoard" method="post" onsubmit="return confirm('وظیفه حذف شود؟');">
+                                        <input type="hidden" name="id" value="@task.Id" />
+                                        <button type="submit" class="btn btn-sm btn-link text-danger p-0">🗑️</button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('.kanban-tasks').forEach(function (column) {
+            Sortable.create(column, {
+                group: 'kanban',
+                animation: 150,
+                onEnd: function (evt) {
+                    let taskId = evt.item.dataset.id;
+                    let newColumn = evt.to.closest('.kanban-column').querySelector('h5').innerText;
+                    let newIndex = evt.newIndex;
+
+                    fetch('/KanbanBoard/UpdateTaskPosition', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            taskId: taskId,
+                            newColumnName: newColumn,
+                            newOrder: newIndex
+                        })
+                    });
+                }
+            });
+        });
+    });
+</script>

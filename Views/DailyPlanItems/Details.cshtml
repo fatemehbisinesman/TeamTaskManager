@@ -1,0 +1,63 @@
+﻿@model TeamTaskManager.Models.DailyPlanItem
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "جزئیات برنامه روزانه";
+    var pc = new PersianCalendar();
+    var persianDate = $"{pc.GetYear(Model.Date)}/{pc.GetMonth(Model.Date):00}/{pc.GetDayOfMonth(Model.Date):00}";
+    string FormatTime(TimeSpan? t) => t.HasValue ? t.Value.ToString(@"hh\:mm") : "--:--";
+}
+
+<div class="container d-flex justify-content-center mt-5 mb-5">
+    <div class="card shadow-lg rounded-4 border-start border-5 border-info w-100" style="max-width: 700px;">
+        <div class="card-header bg-info bg-opacity-75 text-dark text-center py-3 rounded-top">
+            <h5 class="mb-0"><i class="bi bi-info-circle-fill me-1"></i> جزئیات برنامه روزانه</h5>
+        </div>
+
+        <div class="card-body bg-light-subtle px-4 py-4">
+            <div class="mb-3">
+                <label class="form-label fw-bold text-secondary"><i class="bi bi-type me-1"></i> عنوان</label>
+                <div class="form-control-plaintext">@Model.Title</div>
+            </div>
+
+            <div class="mb-3 row">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold text-secondary"><i class="bi bi-calendar-event me-1"></i> تاریخ</label>
+                    <div class="form-control-plaintext">@persianDate</div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold text-secondary"><i class="bi bi-clock-history me-1"></i> زمان</label>
+                    <div class="form-control-plaintext">@FormatTime(Model.StartTime) - @FormatTime(Model.EndTime)</div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold text-secondary"><i class="bi bi-card-text me-1"></i> توضیحات</label>
+                <div class="form-control-plaintext">@Model.Description</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold text-secondary"><i class="bi bi-clipboard-check me-1"></i> وضعیت</label>
+                <div class="form-control-plaintext">
+                    @if (Model.IsCompleted)
+                    {
+                        <span class="badge bg-success rounded-pill px-3 py-2"><i class="bi bi-check-circle-fill me-1"></i> انجام شده</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning text-dark rounded-pill px-3 py-2"><i class="bi bi-hourglass-split me-1"></i> در حال انجام</span>
+                    }
+                </div>
+            </div>
+
+            <div class="mt-4 text-center d-flex justify-content-center gap-3">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary rounded-pill px-4">
+                    <i class="bi bi-pencil-fill me-1"></i> ویرایش
+                </a>
+                <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">
+                    <i class="bi bi-arrow-left me-1"></i> بازگشت
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

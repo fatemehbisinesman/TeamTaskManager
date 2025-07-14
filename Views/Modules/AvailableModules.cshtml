@@ -1,0 +1,56 @@
+﻿@model List<TeamTaskManager.ViewModels.ModuleViewModel>
+@{
+    ViewData["Title"] = "ماژول‌های قابل خرید";
+}
+
+<h2>ماژول‌های قابل خرید</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>نام ماژول</th>
+            <th>نام فارسی</th>
+            <th>نوع</th>
+            <th>قیمت</th>
+            <th>وضعیت</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var module in Model)
+        {
+            <tr>
+                <td>@module.Name</td>
+                <td>@module.NameFa</td>
+                <td>@(module.IsProject ? "پروژه" : "ماژول ثابت")</td>
+                <td>@(module.Price == 0 ? "رایگان" : module.Price.ToString("N0") + " تومان")</td>
+                <td>
+                    @if (module.IsOwned)
+                    {
+                        <span class="text-success">✔ در اختیار شماست</span>
+                    }
+                    else if (module.IsProject)
+                    {
+                        <a asp-controller="Projects" asp-action="StartPayment" asp-route-id="@module.ProjectId" class="btn btn-sm btn-success">
+                            💳 خرید پروژه
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Modules" asp-action="Buy" asp-route-module="@module.Name" class="btn btn-sm btn-primary">
+                            🛒 خرید
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

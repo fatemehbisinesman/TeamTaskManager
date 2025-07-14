@@ -1,0 +1,39 @@
+﻿@model List<ProjectMember>
+@{
+    ViewBag.ProjectId = ViewBag.ProjectId;
+}
+<div class="container d-flex justify-content-center my-4">
+    <div class="card shadow border border-success rounded-4 p-4" style="max-width: 800px; width: 100%;">
+        <h3 class="text-center mb-4 text-success">اعضای پروژه گروهی @ViewBag.ProjectId</h3>
+
+        <!-- لیست اعضا به شکل کارت‌های جداگانه -->
+        @foreach (var member in Model)
+        {
+            <div class="d-flex align-items-center mb-3 p-2 border border-2 border-success rounded-3">
+                <img src="@(member.User?.ProfileImage ?? "/images/default-profile.png")"
+                     class="rounded-circle mx-3"
+                     style="width:80px; height:80px; object-fit:cover;"
+                     alt="@member.User?.FullName" />
+
+                <div class="flex-fill">
+                    <h6 class="mb-1">@member.User?.FullName</h6>
+                    <span class="badge bg-@(member.Role == "Manager" ? "danger" : "secondary")">@member.Role</span>
+                </div>
+
+                <!-- دکمه حذف عضو -->
+                <form method="post" asp-action="Delete" asp-route-id="@member.Id" asp-route-projectId="@ViewBag.ProjectId" class="ms-3">
+                    <button class="btn btn-sm btn-outline-danger" onclick="return confirm('حذف این عضو؟')">حذف</button>
+                </form>
+            </div>
+        }
+
+        <!-- دکمه افزودن عضو -->
+    <div class="text-center mt-4">
+        <a asp-action="Add" asp-route-projectId="@ViewBag.ProjectId" class="btn btn-success mb-3">افزودن عضو جدید</a>
+    </div>
+
+        <!-- دکمه بازگشت به پروژه -->
+        <div class="text-center mt-3">
+            <a asp-controller="GroupProjects" asp-action="Dashboard" asp-route-id="@ViewBag.ProjectId" class="btn btn-outline-secondary">🔙 بازگشت به پروژه</a>        </div>
+    </div>
+</div>

@@ -1,0 +1,76 @@
+﻿@using TaskStatus = TeamTaskManager.Models.TaskStatus
+@model TeamTaskManager.Models.TaskItem
+@using TeamTaskManager.Extensions
+@{
+    ViewData["Title"] = "حذف وظیفه";
+}
+
+<h1 class="text-center mb-4">حذف وظیفه</h1>
+
+<h4>آیا مطمئن هستید که می‌خواهید این وظیفه را حذف کنید؟</h4>
+
+<div class="card p-4 shadow rounded-3" style="max-width: 600px; margin: auto; border: 2px solid #28a745;">
+    <dl class="row">
+        <dt class="col-sm-4 fw-bold">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt class="col-sm-4 fw-bold">
+            وضعیت
+        </dt>
+        <dd class="col-sm-8">
+            @switch (Model.Status)
+            {
+                case TaskStatus.Doing:
+                    @:در حال انجام
+                    break;
+                case TaskStatus.Completed:
+                    @:تکمیل شده
+                    break;
+                case TaskStatus.Canceled:
+                    @:لغو شده
+                    break;
+                default:
+                    @:نامشخص
+                    break;
+            }
+        </dd>
+
+        <dt class="col-sm-4 fw-bold">
+            @Html.DisplayNameFor(model => model.Deadline)
+        </dt>
+        <dd class="col-sm-8">
+            @if (Model.Deadline.HasValue)
+            {
+                @Model.Deadline.Value.ToShamsi() @* تبدیل تاریخ به شمسی *@
+            }
+            else
+            {
+                @:نامشخص
+            }
+        </dd>
+
+        <dt class="col-sm-4 fw-bold">
+            اولویت
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Priority)
+        </dd>
+
+        <dt class="col-sm-4 fw-bold">
+            پروژه مرتبط
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Project.Title)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger me-2">حذف</button>
+        <a asp-action="Index" class="btn btn-secondary">بازگشت به لیست</a>
+    </form>
+</div>

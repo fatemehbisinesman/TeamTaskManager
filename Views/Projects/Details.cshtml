@@ -1,0 +1,65 @@
+﻿@model TeamTaskManager.Models.Project
+@using TeamTaskManager.Extensions
+
+@{
+    ViewData["Title"] = "جزئیات پروژه";
+    var paidAmount = ViewBag.PaidAmount as int?;
+}
+
+<div class="container my-5 d-flex justify-content-center">
+    <div class="bg-dark p-4 shadow-lg" style="width: 100%; max-width: 900px; border-radius: 2rem;">
+        <!-- گرد گرد گرد! -->
+
+        <h1 class="text-success mb-4 text-end">📄 جزئیات پروژه</h1>
+
+        <div class="card border border-2 rounded-4 p-4 mb-4 text-end shadow-sm" style="background-color: #f0f9f0; color: #000;">
+            <h4 class="text-success mb-3">@Model.Title</h4>
+
+            <p class="text-muted small">
+                وضعیت:
+                @if (Model.IsActive)
+                {
+                    <span class="badge bg-success">فعال</span>
+                }
+                else
+                {
+                    <span class="badge bg-secondary">غیرفعال</span>
+                }
+            </p>
+
+            <dl class="row">
+                <dt class="col-sm-3 fw-bold">توضیحات</dt>
+                <dd class="col-sm-9">@Model.Description</dd>
+
+                <dt class="col-sm-3 fw-bold">تاریخ ایجاد</dt>
+                <dd class="col-sm-9">
+                    @(Model.CreatedAt.HasValue ? Model.CreatedAt.Value.ToShamsi(true) : "تاریخ نامشخص")
+                </dd>
+            </dl>
+
+            @if (paidAmount.HasValue && paidAmount.Value > 0)
+            {
+                <div class="alert alert-light border-start border-success mt-4 rounded-3">
+                    💰 مجموع پرداخت‌های این پروژه:
+                    <strong class="text-success">@paidAmount.Value.ToString("N0") تومان</strong>
+                </div>
+            }
+            @*else
+            {
+                <div class="alert alert-warning border-start border-warning mt-4 rounded-3">
+                    هنوز هیچ پرداختی برای این پروژه ثبت نشده است.
+                </div>
+            }*@
+        </div>
+
+        <div class="d-flex justify-content-between mt-3">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-success rounded-pill px-4 py-2">
+                ✏️ ویرایش
+            </a>
+            <a asp-action="Index" class="btn btn-outline-light rounded-pill px-4 py-2">
+                🔙 بازگشت
+            </a>
+        </div>
+
+    </div>
+</div>

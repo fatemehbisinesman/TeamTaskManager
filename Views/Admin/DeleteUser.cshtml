@@ -1,0 +1,48 @@
+﻿@model TeamTaskManager.Models.User
+
+@{
+    ViewData["Title"] = "تأیید حذف کاربر";
+}
+
+<section class="container my-5 d-flex justify-content-center">
+    <div class="card w-100 shadow rounded-4 border-0" style="background-color: #000000; max-width: 900px;">
+        <div class="row p-4">
+            <!-- پروفایل -->
+            <div class="col-md-5 mb-4 mb-md-0 d-flex flex-column align-items-center justify-content-center">
+                <img src="@Url.Content(Model?.ProfileImage ?? "~/assets/img/team-4.jpg")"
+                     class="img-fluid rounded-circle mb-3"
+                     style="width: 140px; height: 140px; object-fit: cover;" />
+                <h5 class="text-light">@Model.FullName</h5>
+                <span class="badge bg-@(Model.Role == "Admin" ? "danger" : "secondary")">@Model.Role</span>
+                <p class="text-muted text-center mt-2 small">در صورت تأیید، این کاربر از سیستم حذف خواهد شد.</p>
+            </div>
+
+            <!-- متن تأیید و عملیات -->
+            <div class="col-md-7">
+                <h4 class="text-danger mb-3">
+                    <i class="bi bi-exclamation-triangle-fill"></i> آیا مطمئن هستید؟
+                </h4>
+
+                <p class="text-light">اطلاعات کاربر برای حذف:</p>
+                <ul class="text-light">
+                    <li><strong>نام:</strong> @Model.FullName</li>
+                    <li><strong>ایمیل:</strong> @Model.Email</li>
+                    <li><strong>نقش:</strong> @Model.Role</li>
+                </ul>
+
+                <form asp-action="DeleteUser" method="post" class="mt-4">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger rounded-pill px-3">
+                            <i class="bi bi-trash-fill"></i> بله، حذف شود
+                        </button>
+                        <a asp-action="UsersList" class="btn btn-outline-light rounded-pill px-3">
+                            <i class="bi bi-arrow-right-circle"></i> بازگشت
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

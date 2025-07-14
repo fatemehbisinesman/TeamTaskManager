@@ -1,0 +1,107 @@
+﻿@using TeamTaskManager.Extensions
+@model IEnumerable<TeamTaskManager.Models.UserModule>
+
+@{
+    ViewData["Title"] = "سفارشات من";
+}
+
+<div class="container mt-4 mb-5" style="max-width: 950px;">
+    <div class="card shadow-sm border border-success border-opacity-25 rounded-4 p-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="text-success m-0">
+                <i class="bi bi-bag-check-fill me-1"></i> @ViewData["Title"]
+            </h4>
+            <a asp-controller="Users" asp-action="Dashboard" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1">
+                <i class="bi bi-arrow-bar-right"></i> بازگشت به داشبورد
+            </a>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info text-center rounded-3">
+                شما تاکنون سفارشی ثبت نکرده‌اید.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle text-center shadow-sm">
+                    <thead class="table-success">
+                        <tr>
+                            <th>نام</th>
+                            <th>تاریخ خرید</th>
+                            <th>وضعیت پرداخت</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var isProject = item.IsProject && item.Project != null;
+
+                            if (!isProject || !item.IsPaid)
+                            {
+                                continue;
+                            }
+
+                            var projectTitle = item.Project.Title?.Trim();
+
+                            <tr>
+                                <td>@projectTitle</td>
+                                <td>@item.PurchasedAt.ToShamsi(true)</td>
+                                <td>
+                                    <span class="badge bg-success bg-opacity-75">پرداخت شده</span>
+                                </td>
+                                <td class="d-flex flex-wrap justify-content-center gap-2">
+
+                                    @if (projectTitle == "مدیریت تیم فروش")
+                                    {
+                                        <a asp-action="EnterProject"
+                                           asp-controller="Orders"
+                                           asp-route-id="@item.Project.Id"
+                                           class="btn btn-outline-success btn-sm d-flex align-items-center gap-1">
+                                            <i class="bi bi-box-arrow-in-right"></i> ورود
+                                        </a>
+                                    }
+                                    else if (projectTitle == "طراحی سایت شرکتی")
+                                    {
+                                        <a asp-action="ProjectBoard"
+                                           asp-controller="KanbanBoard"
+                                           asp-route-projectId="@item.Project.Id"
+                                           class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1">
+                                            <i class="bi bi-kanban"></i> کانبان
+                                        </a>
+                                    }
+                                    else if (projectTitle == "برنامه ریزی روزانه")
+                                    {
+                                        <a asp-action="Index"
+                                           asp-controller="DailyPlanItems"
+                                           asp-route-projectId="@item.Project.Id"
+                                           class="btn btn-outline-warning btn-sm d-flex align-items-center gap-1">
+                                            <i class="bi bi-journal-text"></i> برنامه‌ریزی
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-danger small">پروژه ناشناخته</span>
+                                    }
+
+                                    <form asp-action="DeleteProjectOrder"
+                                          asp-controller="Orders"
+                                          method="post"
+                                          onsubmit="return confirm('آیا از حذف این سفارش مطمئن هستید؟');">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button type="submit" class="btn btn-outline-danger btn-sm d-flex align-items-center gap-1">
+                                            <i class="bi bi-trash-fill"></i> حذف
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

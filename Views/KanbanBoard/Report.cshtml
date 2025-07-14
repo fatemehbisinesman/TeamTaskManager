@@ -1,0 +1,84 @@
+﻿@{
+    ViewData["Title"] = "گزارش پروژه - " + ViewBag.ProjectTitle;
+    int total = ViewBag.TotalTasks;
+    int toDo = ViewBag.ToDoCount;
+    int doing = ViewBag.DoingCount;
+    int done = ViewBag.DoneCount;
+
+    double toDoPercent = total > 0 ? (toDo * 100.0 / total) : 0;
+    double doingPercent = total > 0 ? (doing * 100.0 / total) : 0;
+    double donePercent = total > 0 ? (done * 100.0 / total) : 0;
+}
+
+<div style="max-width: 540px; margin: 30px auto; padding: 25px; border: 2px solid #198754; border-radius: 15px; background: #f8fdf8; box-shadow: 0 4px 12px rgba(0,0,0,0.1); font-family: Vazir, Tahoma, sans-serif;">
+
+    <h5 class="text-success text-center mb-4">@ViewData["Title"]</h5>
+
+    <ul style="list-style: none; padding: 0; font-size: 0.95rem;">
+        <li><strong>کل وظایف:</strong> <span class="text-dark">@total</span></li>
+        <hr />
+        <li>
+            <strong class="text-warning">در انتظار انجام (To Do):</strong> @toDo
+            <span class="text-muted">(@toDoPercent.ToString("0.#")%)</span>
+        </li>
+        <hr />
+        <li>
+            <strong class="text-primary">در حال انجام (Doing):</strong> @doing
+            <span class="text-muted">(@doingPercent.ToString("0.#")%)</span>
+        </li>
+        <hr />
+        <li>
+            <strong class="text-success">انجام شده (Done):</strong> @done
+            <span class="text-muted">(@donePercent.ToString("0.#")%)</span>
+        </li>
+    </ul>
+
+    <div class="text-center mt-4 mb-3">
+        <canvas id="taskChart" width="300" height="150"></canvas>
+    </div>
+
+    <div class="text-end mt-4">
+        <button type="button" onclick="history.back()" class="btn btn-outline-secondary">
+            ⬅️ بازگشت
+        </button>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('taskChart').getContext('2d');
+        const taskChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['To Do', 'Doing', 'Done'],
+                datasets: [{
+                    data: [@toDo, @doing, @done],
+                    backgroundColor: [
+                        'rgba(255, 193, 7, 0.7)',   // To Do
+                        'rgba(13, 110, 253, 0.7)',  // Doing
+                        'rgba(25, 135, 84, 0.7)'    // Done
+                    ],
+                    borderColor: [
+                        'rgba(255, 193, 7, 1)',
+                        'rgba(13, 110, 253, 1)',
+                        'rgba(25, 135, 84, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: { size: 13 }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+}

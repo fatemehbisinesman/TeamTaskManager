@@ -1,0 +1,37 @@
+﻿@model TeamTaskManager.Models.Project
+@{
+    ViewData["Title"] = "تنظیمات پروژه";
+}
+
+<div class="container mt-5 mb-5" style="max-width: 600px;">
+    <div class="card border-success border-3 shadow-sm rounded-3">
+        <div class="card-header bg-success text-white fs-5 fw-bold">
+            ⚙️ تنظیمات پروژه - @Model.Title
+        </div>
+        <div class="card-body">
+
+            <form asp-action="ProjectSettings" method="post" novalidate>
+                <input type="hidden" asp-for="Id" />
+
+                <div class="mb-4">
+                    <label asp-for="Title" class="form-label">عنوان پروژه</label>
+                    <input asp-for="Title" class="form-control" placeholder="عنوان پروژه را وارد کنید" required />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input asp-for="IsActive" class="form-check-input" id="IsActiveCheck" />
+                    <label class="form-check-label" for="IsActiveCheck">فعال باشد</label>
+                </div>
+
+                <button type="submit" class="btn btn-success me-2">💾 ذخیره تغییرات</button>
+                <a asp-action="ProjectBoard" asp-route-projectId="@Model.Id" class="btn btn-outline-secondary">⬅️ بازگشت</a>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,25 @@
+﻿@model IEnumerable<TeamTaskManager.Models.TaskItem>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>عنوان</th>
+            <th>وضعیت</th>
+            <th>تغییر وضعیت</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in Model)
+        {
+            <tr>
+                <td>@task.Title</td>
+                <td>@task.Status.ToString()</td>
+                <td>
+                    <form asp-action="ChangeStatus" asp-route-id="@task.Id" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-sm btn-primary">تغییر وضعیت</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

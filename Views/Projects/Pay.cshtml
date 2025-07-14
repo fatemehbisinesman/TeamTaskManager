@@ -1,0 +1,13 @@
+﻿@model TeamTaskManager.Models.Project
+
+<h2>پرداخت پروژه</h2>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-success">@ViewBag.Message</div>
+}
+
+<p><strong>عنوان پروژه:</strong> @Model.Title</p>
+<p><strong>وضعیت پرداخت:</strong> @(Model.IsPaid ? "پرداخت شده" : "پرداخت نشده")</p>
+
+<a asp-action="Index" class="btn btn-primary"><i class="bi-arrow-left"></i></a>

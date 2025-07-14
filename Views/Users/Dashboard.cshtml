@@ -1,0 +1,71 @@
+﻿@using Microsoft.AspNetCore.Http
+@model TeamTaskManager.Models.User
+
+@{
+    ViewData["Title"] = "داشبورد کاربر";
+    var name = Context.Session.GetString("UserName");
+    var userId = Context.Session.GetInt32("UserId");
+    var role = Context.Session.GetString("UserRole");
+}
+
+<link href="~/lib/bootstrap/bootstrap-icons.css" rel="stylesheet" />
+<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+<link href="~/assets/css/style.css" rel="stylesheet" />
+
+<section class="container my-5">
+    <div class="card text-white p-4 shadow-lg" style="border-radius: 1rem; background-color: #000000;">
+        <h4 class="mb-4 text-white text-end">
+            <i class="bi bi-person"></i> داشبورد کاربر
+        </h4>
+
+        <div class="row">
+            <!-- ستون پروفایل -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm p-3 text-center h-100" style="border-radius: 1rem; border: 1px solid #000000; background-color: #000000;">
+
+
+                    <img src="@Url.Content(Model?.ProfileImage ?? "~/assets/img/team-4.jpg")"
+                         class="img-fluid rounded-circle mb-3 mx-auto d-block"
+                         style="width: 120px; height: 120px; object-fit: cover;" />
+
+                    <form asp-action="UploadProfileImage" asp-controller="Users" method="post" enctype="multipart/form-data" class="mb-3">
+                        <input type="file" name="profileImage" class="form-control form-control-sm mb-2" required />
+                        <button type="submit" class="btn btn-sm btn-outline-warning w-100">📤 بارگذاری</button>
+                    </form>
+
+                    <h5 class="mb-2 text-warning fw-bold">👋 سلام، @name</h5>
+                    <span class="badge bg-success text-dark mb-3">کاربر عادی</span>
+                    <a asp-controller="Users" asp-action="Edit" asp-route-id="@userId"
+                       class="btn btn-outline-warning btn-sm w-100 mb-1">✏️ ویرایش پروفایل</a>
+                    <a asp-controller="Users" asp-action="ChangePassword"
+                       class="btn btn-primary btn-sm w-100">🔒 تغییر رمز عبور</a>
+                    <a asp-controller="Auth" asp-action="Logout"
+                       class="btn btn-outline-danger btn-sm mt-2 w-100">🚪 خروج</a>
+                </div>
+            </div>
+
+            <!-- ستون پروژه و سفارشات -->
+            <div class="col-md-8 d-flex flex-column justify-content-center align-items-center gap-4">
+                <!-- پروژه‌های من -->
+                <!-- پروژه‌های من -->
+                <a asp-controller="Projects" asp-action="Index" class="text-decoration-none w-75">
+                    <div class="card border border-primary text-center p-4" style="border-radius: 1rem; height: 140px; background-color: #cfe2ff;">
+                        <h4 class="text-primary m-0 d-flex flex-column justify-content-center h-100">
+                            <i class="bi bi-folder2 mb-2"></i> پروژه‌های من
+                        </h4>
+                    </div>
+                </a>
+
+                <!-- سفارشات من -->
+                <a asp-controller="Orders" asp-action="Index" class="text-decoration-none w-75">
+                    <div class="card border border-success text-center p-4" style="border-radius: 1rem; height: 140px; background-color: #d1e7dd;">
+                        <h4 class="text-success m-0 d-flex flex-column justify-content-center h-100">
+                            <i class="bi bi-receipt mb-2"></i> سفارشات من
+                        </h4>
+                    </div>
+                </a>
+              
+            </div>
+        </div>
+    </div>
+</section>

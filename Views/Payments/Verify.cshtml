@@ -1,0 +1,9 @@
+﻿@{ ViewData["Title"] = "نتیجه پرداخت"; }
+
+<h2>@ViewBag.Message</h2>
+
+@if (ViewBag.RefId != null)
+{
+<p>کد پیگیری: <strong>@ViewBag.RefId</strong></p>}
+
+<a href="/Payments/Index" class="btn btn-primary">بازگشت</a>

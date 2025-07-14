@@ -1,0 +1,84 @@
+﻿@model List<TeamTaskManager.Models.Payment>
+@using TeamTaskManager.Extensions
+
+<main>
+    <div class="container d-flex justify-content-center">
+        <div class="card border-success shadow-sm mb-4" style="width: 85%;">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <span>💳 لیست تراکنش‌ها</span>
+                <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-light btn-sm">
+                    بازگشت به داشبورد 🔙
+                </a>
+            </div>
+            <div class="card-body bg-white text-end">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover text-end align-middle">
+                        <thead class="table-success">
+                            <tr>
+                                <th>👤 کاربر</th>
+                                <th>📌 برای</th>
+                                <th>💵 مبلغ</th>
+                                <th>📅 تاریخ</th>
+                                <th>⚙️ وضعیت</th>
+                                <th>🔧 عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var p in Model)
+                                {
+                                    <tr>
+                                        <td>@p.UserName</td>
+                                        <td>@p.PaymentFor</td>
+                                        <td>@p.Amount.ToString("N0") تومان</td>
+                                        <td>@p.PaymentDate.ToShamsi(true)</td>
+                                        <td>
+                                            @if (p.Status == "PAID")
+                                            {
+                                                <span class="badge bg-success">پرداخت موفق</span>
+                                            }
+                                            else if (p.Status == "FAILED")
+                                            {
+                                                <span class="badge bg-danger">ناموفق</span>
+                                            }
+                                            else if (p.Status == "REFUNDED")
+                                            {
+                                                <span class="badge bg-warning text-dark">برگشت‌خورده</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">@p.Status</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a asp-action="PrintReceipt" asp-controller="Admin" asp-route-id="@p.Id" class="btn btn-outline-primary btn-sm">
+                                                    🖨 چاپ رسید
+                                                </a>
+
+                                                @* اگر نیاز به دکمه بازگشت وجه داری *@
+                                                @if (p.Status == "PAID")
+                                                {
+                                                    <a asp-action="Refund" asp-route-id="@p.Id" class="btn btn-outline-danger btn-sm">
+                                                        ↩️ بازگشت وجه
+                                                    </a>
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">هیچ تراکنشی ثبت نشده 😐</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

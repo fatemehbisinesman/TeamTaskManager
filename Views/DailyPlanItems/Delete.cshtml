@@ -1,0 +1,47 @@
+﻿@model TeamTaskManager.Models.DailyPlanItem
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "حذف برنامه روزانه";
+    var pc = new PersianCalendar();
+    var persianDate = $"{pc.GetYear(Model.Date)}/{pc.GetMonth(Model.Date):00}/{pc.GetDayOfMonth(Model.Date):00}";
+}
+
+<div class="container d-flex justify-content-center mt-5 mb-5">
+    <div class="card border-danger border-2 rounded-4 shadow w-75" style="max-width: 700px;">
+        <div class="card-header bg-danger text-white text-center rounded-top-4">
+            <h5><i class="bi bi-trash-fill me-1"></i> حذف برنامه روزانه</h5>
+        </div>
+
+        <div class="card-body">
+            <p class="text-center mb-4 fs-6">آیا از حذف برنامه زیر مطمئن هستید؟</p>
+
+            <div class="row mb-3">
+                <div class="col-sm-4 text-end fw-bold text-secondary">عنوان برنامه:</div>
+                <div class="col-sm-8 text-end">@Model.Title</div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-4 text-end fw-bold text-secondary">تاریخ:</div>
+                <div class="col-sm-8 text-end">@persianDate</div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-4 text-end fw-bold text-secondary">وضعیت:</div>
+                <div class="col-sm-8 text-end">
+                    @(Model.IsCompleted ? "✅ انجام شده" : "⏳ در حال انجام")
+                </div>
+            </div>
+
+            <form asp-action="DeleteConfirmed" method="post" class="d-flex justify-content-center mt-4 gap-3">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="btn btn-danger px-4">
+                    <i class="bi bi-trash-fill me-1"></i> حذف
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-return-right me-1"></i> بازگشت
+                </a>
+            </form>
+        </div>
+    </div>
+</div>

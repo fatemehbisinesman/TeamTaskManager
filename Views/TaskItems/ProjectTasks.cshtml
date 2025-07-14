@@ -1,0 +1,77 @@
+﻿@model IEnumerable<TeamTaskManager.Models.TaskItem>
+@{
+    ViewData["Title"] = "وظایف پروژه";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container d-flex justify-content-center">
+    <div class="shadow bg-white rounded-4 p-4 mt-4" style="max-width: 1000px; width: 100%; border: 2px solid #198754;">
+        <h3 class="text-center text-success mb-4">📋 لیست وظایف این پروژه</h3>
+
+        <div class="text-end mb-3">
+            <a asp-controller="GroupProjects" asp-action="Dashboard" asp-route-id="@Model.FirstOrDefault()?.ProjectId" class="btn btn-outline-secondary btn-sm">🔙 بازگشت به داشبورد پروژه</a>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <p class="text-muted text-center">هیچ وظیفه‌ای ثبت نشده است.</p>
+        }
+        else
+        {
+            <table class="table table-bordered text-center">
+                <thead class="table-success">
+                    <tr>
+                        <th>عنوان</th>
+                        <th>وضعیت</th>
+                        <th>اولویت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var task in Model)
+                    {
+                        <tr>
+                            <td>@task.Title</td>
+                            <td>
+                                @{
+                                    string statusText = task.Status switch
+                                    {
+                                        TeamTaskManager.Models.TaskStatus.Completed => "✅ تکمیل شده",
+                                        TeamTaskManager.Models.TaskStatus.Canceled => "❌ لغو شده",
+                                        _ => "🔄 در حال انجام"
+                                    };
+                                }
+                                @statusText
+                            </td>
+                            <td>
+                                @{
+                                    string prioText = task.Priority switch
+                                    {
+                                        TeamTaskManager.Models.PriorityLevel.High => "بالا",
+                                        TeamTaskManager.Models.PriorityLevel.Medium => "متوسط",
+                                        TeamTaskManager.Models.PriorityLevel.Low => "پایین",
+                                        _ => "نامشخص"
+                                    };
+                                }
+                                @prioText
+                            </td>
+                            <td>
+                                <form asp-controller="TaskItems" asp-action="ChangeStatus" asp-route-id="@task.Id" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-outline-primary">🔁 تغییر وضعیت</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+<style>
+    body {
+        direction: rtl;
+        background-color: #f8f9fa;
+    }
+</style>
+

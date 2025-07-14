@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "ورود";
+}
+
+<section class="container-fluid my-5">
+    <div class="row gx-2">
+        <!-- عکس سمت راست -->
+        <div class="col-md-6 order-md-2 d-none d-md-block pe-0">
+            <img src="~/assets/img/portfolio/web1.jpg" alt="تصویر" class="img-fluid w-100 h-100 object-fit-cover rounded-end shadow blur-border" />
+        </div>
+
+        <!-- فرم ورود سمت چپ داخل کادر مشکی -->
+        <div class="col-md-6 order-md-1 ps-4 d-flex align-items-center" style="position: relative; min-height: 500px;">
+            <!-- کادر مشکی زیر با سایه و لبه گرد -->
+            <div style="
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                right: -10px;
+                bottom: -10px;
+                background-color: #000;
+                border-radius: 1.5rem;
+                box-shadow: 0 0 20px rgba(0,0,0,0.8);
+                z-index: 1;">
+            </div>
+
+            <!-- کادر سفید فرم روی کادر مشکی -->
+            <div class="bg-white rounded-4 shadow p-4 w-100" style="position: relative; z-index: 2;">
+                <h2 class="text-center mb-4">ورود به حساب کاربری</h2>
+                <form asp-action="Login" method="post" class="w-100 px-3">
+                    <div class="form-group mb-3">
+                        <label for="email">ایمیل</label>
+                        <input name="email" class="form-control" required />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="password">رمز عبور</label>
+                        <input name="password" type="password" class="form-control" required />
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 rounded-pill mt-3">ورود</button>
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger mt-3">@ViewBag.Error</div>
+                    }
+
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success mt-3">@TempData["SuccessMessage"]</div>
+                    }
+
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger mt-3">@TempData["ErrorMessage"]</div>
+                    }
+
+                    <div class="text-center mt-4">
+                        <a asp-action="ForgotPassword" asp-controller="Auth">رمز عبور را فراموش کرده‌اید؟</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+}

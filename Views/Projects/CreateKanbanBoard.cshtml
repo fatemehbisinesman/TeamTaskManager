@@ -1,0 +1,68 @@
+﻿@model TeamTaskManager.Models.Project
+
+@{
+    ViewData["Title"] = "ایجاد بورد کانبان";
+}
+
+<section class="container my-5 d-flex justify-content-center">
+    <!-- کادر مشکی -->
+    <div style="
+        background-color: #111;
+        border-radius: 8px;
+        padding: 30px;
+        width: 100%;
+        max-width: 750px;
+        display: flex;
+        justify-content: center;
+        box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    ">
+        <!-- فرم داخلی -->
+        <div class="rounded-3 shadow-sm w-100" style="max-width: 600px; background-color: #e9f5f0; padding: 25px;">
+            <h3 class="mb-4 text-end text-primary">
+                <i class="bi bi-kanban"></i> ایجاد بورد کانبان
+            </h3>
+
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <form asp-action="CreateGroupProject" method="post" enctype="multipart/form-data" class="text-end">
+                <div class="form-group mb-3">
+                    <label class="form-label">عنوان پروژه</label>
+                    <input asp-for="Title" class="form-control" placeholder="مثلاً: سیستم مدیریت وظایف با کانبان" />
+                    <span asp-validation-for="Title" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label">توضیحات</label>
+                    <textarea asp-for="Description" class="form-control" rows="5" placeholder="توضیحات کامل درباره بورد کانبان..."></textarea>
+                    <span asp-validation-for="Description" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label">هزینه (تومان)</label>
+                    <input asp-for="Price" class="form-control" type="number" min="0" value="100000" />
+                    <span asp-validation-for="Price" class="text-danger small"></span>
+                </div>
+
+                <div class="form-check form-switch mb-4">
+                    <input asp-for="IsActive" class="form-check-input" />
+                    <label class="form-check-label">فعال باشد</label>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="form-label">تصویر کاور پروژه</label>
+                    <input type="file" name="coverImage" class="form-control" />
+                </div>
+
+                <!-- دکمه‌ها -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <button type="submit" class="btn btn-success rounded-pill px-4 py-1 small fw-bold">
+                        ✔️ ایجاد بورد کانبان
+                    </button>
+                    <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-secondary rounded-pill px-4 py-1 small">
+                        <i class="bi bi-arrow-right ms-1"></i> بازگشت
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

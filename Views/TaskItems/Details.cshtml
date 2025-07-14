@@ -1,0 +1,63 @@
+﻿@model TeamTaskManager.Models.TaskItem
+@using TeamTaskManager.Extensions
+@using TaskStatus = TeamTaskManager.Models.TaskStatus
+
+
+
+@{
+    ViewData["Title"] = "جزئیات وظیفه";
+}
+
+<div class="container d-flex justify-content-center mt-5">
+    <div class="card border-success rounded-4 shadow-sm p-4" style="max-width: 600px; width: 100%;">
+        <h4 class="text-center text-success mb-4">📋 جزئیات وظیفه</h4>
+
+        <dl class="row">
+            <dt class="col-sm-4 text-end">عنوان وظیفه:</dt>
+            <dd class="col-sm-8">@Model.Title</dd>
+
+            <dt class="col-sm-4 text-end">وضعیت:</dt>
+            <dd class="col-sm-8">
+                @{
+                    var status = Model.Status switch
+                    {
+                        TaskStatus.Doing => "در حال انجام",
+                        TaskStatus.Completed => "تکمیل شده",
+                        TaskStatus.Canceled => "لغو شده",
+                        _ => "نامشخص"
+                    };
+                }
+                @status
+            </dd>
+
+            <dt class="col-sm-4 text-end">موعد انجام:</dt>
+            <dd class="col-sm-8">@Model.Deadline?.ToShamsi() ?? "مشخص نشده"</dd>
+
+            <dt class="col-sm-4 text-end">اولویت:</dt>
+            <dd class="col-sm-8">
+                @{
+                    var priority = Model.Priority switch
+                    {
+                        PriorityLevel.Low => "پایین",
+                        PriorityLevel.Medium => "متوسط",
+                        PriorityLevel.High => "بالا",
+                        _ => "نامشخص"
+                    };
+                }
+                @priority
+            </dd>
+
+            <dt class="col-sm-4 text-end">پروژه مرتبط:</dt>
+            <dd class="col-sm-8">@Model.Project?.Title</dd>
+        </dl>
+
+        <div class="d-flex justify-content-between mt-4">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary rounded-pill">
+                ✏️ ویرایش
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary rounded-pill">
+                🔙 بازگشت
+            </a>
+        </div>
+    </div>
+</div>

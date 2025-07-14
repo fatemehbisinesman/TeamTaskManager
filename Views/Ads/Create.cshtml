@@ -1,0 +1,86 @@
+﻿@model TeamTaskManager.Models.Ad
+@{
+    ViewData["Title"] = "افزودن تبلیغ جدید";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="bg-dark text-white rounded-4 p-4 shadow">
+
+        <div class="row justify-content-center align-items-center">
+
+            <!-- فرم سمت چپ -->
+            <div class="col-md-6 mb-4">
+                <div class="card rounded-4 shadow border-0" style="background-color: #e6f7ee;">
+                    <div class="card-body p-4 text-dark">
+                        <h4 class="text-center mb-4 text-success">
+                            <i class="bi bi-megaphone"></i> @ViewData["Title"]
+                        </h4>
+
+                        <form asp-action="Create" method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label asp-for="Title" class="form-label">عنوان تبلیغ</label>
+                                <input asp-for="Title" class="form-control form-control-sm rounded-3" placeholder="مثلاً: تخفیف ویژه تابستان" />
+                                <span asp-validation-for="Title" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Link" class="form-label">لینک تبلیغ</label>
+                                <input asp-for="Link" class="form-control form-control-sm rounded-3" placeholder="https://..." />
+                                <span asp-validation-for="Link" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="ImageUrl" class="form-label">آدرس عکس (ImageUrl)</label>
+                                <input asp-for="ImageUrl" class="form-control form-control-sm rounded-3" placeholder="/images/ad.jpg" />
+                                <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">انتخاب عکس</label>
+                                <input type="file" name="ImageFile" class="form-control form-control-sm rounded-3" accept="image/*" onchange="previewImage(event)" />
+                            </div>
+
+                            <!-- پیش‌نمایش عکس -->
+                            <div class="text-center mb-3">
+                                <img id="preview" src="#" alt="پیش‌نمایش عکس"
+                                     class="img-thumbnail d-none rounded-3 border border-secondary"
+                                     style="max-height: 150px;" />
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="submit" class="btn btn-success px-4 rounded-pill fw-bold">
+                                    💾 ذخیره
+                                </button>
+                                <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-secondary rounded-pill px-4 py-1 small">
+                                    <i class="bi bi-arrow-right ms-1"></i> بازگشت
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- عکس سمت راست -->
+            <div class="col-md-6 text-center">
+                <img src="~/assets/img/about-vision.jpg" alt="تصویر تبلیغاتی"
+                     class="img-fluid rounded-4 shadow border border-success border-opacity-25"
+                     style="max-height: 420px;" />
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function previewImage(event) {
+            var preview = document.getElementById('preview');
+            var file = event.target.files[0];
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                preview.classList.remove('d-none');
+            }
+        }
+    </script>
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

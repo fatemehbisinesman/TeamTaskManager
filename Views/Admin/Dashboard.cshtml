@@ -1,0 +1,450 @@
+﻿@using Microsoft.AspNetCore.Http
+@using TeamTaskManager.Extensions
+
+
+
+@{ ViewData["Title"] = "داشبورد مدیر";
+                var name = Context.Session.GetString("UserName");
+                var userId = Context.Session.GetInt32("UserId");
+               }
+
+<link href="~/lib/bootstrap/bootstrap-icons.css" rel="stylesheet" />
+<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+<link href="~/lib/bootstrap/dist/css/bootstrap-grid.css" rel="stylesheet" />
+<link href="~/lib/bootstrap/dist/css/bootstrap-reboot.css" rel="stylesheet" />
+<link href="~/assets/css/style.css" rel="stylesheet" />
+<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+<section class="container my-5">
+    <div class="card p-4" style="background-color: #1a1a1a; border-radius: 1rem; color: white;">
+        <div class="row">
+            <!-- ستون منوی کناری -->
+
+            <div class="col-md-3 mb-4">
+                <div class="text-center">
+                    <!-- عکس پروفایل -->
+                    <img src="@Url.Content(Model?.ProfileImage ?? "~/assets/img/team-4.jpg")"
+                         class="img-fluid rounded-circle mb-3 mx-auto d-block"
+                         style="width: 120px; height: 120px; object-fit: cover;" />
+
+                    <!-- آپلود عکس -->
+                    <form asp-action="UploadProfileImage" asp-controller="Admin" method="post" enctype="multipart/form-data" class="mb-3">
+                        <input type="file" name="profileImage" class="form-control form-control-sm mb-2" required />
+                        <button type="submit" class="btn btn-sm btn-outline-success w-100">📤 بارگذاری</button>
+                    </form>
+
+                    <h5 class="mb-2 text-success fw-bold">👑 سلام، @name</h5>
+                    <span class="badge bg-danger mb-3">مدیر سیستم</span>
+                    <a asp-controller="Admin" asp-action="EditUser" asp-route-id="@userId"
+                       class="btn btn-outline-primary btn-sm w-100">✏️ ویرایش پروفایل</a>
+                    <a asp-controller="Admin" asp-action="ChangePassword" asp-route-id="@userId" class="btn btn-outline-warning btn-sm mt-2">
+                        🔐 تغییر رمز عبور
+                    </a>
+                    <a asp-controller="Auth" asp-action="Logout" class="btn btn-outline-danger btn-sm mt-2">🚪 خروج</a>
+
+
+
+                </div>
+
+            </div>
+
+            <!-- آمار کلی -->
+            <div class="col-md-9">
+                <h4 class="mb-4 text-success text-end">
+                    <i class="bi bi-person-check-fill"></i> پنل مدیریت
+                </h4>
+
+                <div class="row text-center">
+
+                    <h5 class="mb-4 text-success"><i class="bi bi-graph-up-arrow"></i> آمارو گزارش ها</h5>
+                    <div class="col-md-4 mb-3">
+                        <div onclick="toggleDetails('userDetails')" style="background: linear-gradient(135deg, #e0f7ec, #c9fcd7); border-radius: 16px; padding: 20px; transition: 0.3s; cursor: pointer;" class="shadow-sm border border-success border-opacity-25 hover-shadow">
+                            <h6 class="text-success"><i class="bi bi-people"></i> مدیریت کاربران</h6>
+                            <p class="fs-3 fw-bold text-dark mt-2">@ViewBag.TotalUsers</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div onclick="toggleDetails('projectDetails')" style="background: linear-gradient(135deg, #e0f3ff, #d1eeff); border-radius: 16px; padding: 20px; transition: 0.3s; cursor: pointer;" class="shadow-sm border border-primary border-opacity-25 hover-shadow">
+                            <h6 class="text-primary"><i class="bi bi-folder2-open"></i> مدیریت پروژه‌ها</h6>
+                            <p class="fs-3 fw-bold text-dark mt-2">@ViewBag.TotalProjects</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div onclick="toggleDetails('paymentDetails')" style="background: linear-gradient(135deg, #fff8e6, #fff2cc); border-radius: 16px; padding: 20px; transition: 0.3s; cursor: pointer;" class="shadow-sm border border-warning border-opacity-25 hover-shadow">
+                            <h6 class="text-warning"><i class="bi bi-cash-coin"></i> مدیریت مالی</h6>
+                            <p class="fs-3 fw-bold text-dark mt-2">@ViewBag.TotalPayments</p>
+                        </div>
+                    </div>
+
+
+                    <!-- بخش نمایش جزئیات -->
+                    <div id="userDetails" class="detail-section d-none mt-4">
+                        <div class="card p-3 text-end border border-success bg-white">
+                            <!-- اضافه شد text-dark -->
+                            <h5 class="text-success mb-3">جزئیات کاربران <i class="bi bi-people"></i></h5>
+
+                            <ul class="list-unstyled mb-4 text-dark">
+                                <!-- اگر لازم بود اضافه کنید -->
+                                <li>👤 تعداد کل کاربران: @ViewBag.TotalUsers</li>
+                                <li>👑 تعداد مدیران: @ViewBag.TotalAdmins</li>
+                                <li>🧑‍ کاربران عادی: @ViewBag.TotalNormalUsers</li>
+                            </ul>
+                            <h6 class="mb-2 text-success fw-bold">کاربران جدید:</h6>
+                            @if (ViewBag.LatestUsers is List<TeamTaskManager.Models.User> latestUsers && latestUsers.Any())
+                            {
+                                <table class="table table-bordered table-sm text-end">
+                                    <thead style="background-color: #198754; color: white;">
+                                        <tr>
+                                            <th>نام</th>
+                                            <th>ایمیل</th>
+                                            <th>نقش</th>
+                                            <th>تاریخ ثبت‌نام</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var user in latestUsers)
+                                        {
+                                            <tr>
+                                                <td>@user.FullName</td>
+                                                <td>@user.Email</td>
+                                                <td>
+                                                    @if (user.Role == "Admin")
+                                                    {
+                                                        <span class="badge bg-danger">مدیر</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-secondary">عادی</span>
+                                                    }
+                                                </td>
+                                                <td>@(user.RegisterDate.ToShamsi(true))</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <p class="text-muted">هنوز کاربری ثبت‌نام نکرده 😅</p>
+                            }
+
+
+                            <div class="mb-2 d-flex justify-content-start mt-2">
+                                <a asp-controller="Admin" asp-action="UsersList"
+                                   class="btn btn-outline-success btn-sm rounded-pill px-3">
+                                    👥 مشاهده همه کاربران
+                                </a>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+
+                    <div id="projectDetails" class="detail-section d-none mt-4">
+                        <div class="card p-3 text-end bg-white border text-dark">
+                            <h5 class="text-primary mb-3"><i class="bi bi-folder2-open"></i> جزئیات پروژه‌ها</h5>
+                            <ul class="list-unstyled mb-3 text-dark">
+                                <li>🔢 کل پروژه‌ها: @ViewBag.TotalProjects</li>
+                                <li>🟢 فعال: @ViewBag.ActiveProjects</li>
+                                <li>⏳ غیر فعال: @ViewBag.PendingProjects</li>
+                            </ul>
+
+                            <h6 class="mb-2">🗂 پروژه‌های جدید</h6>
+
+                            @if (ViewBag.LatestProjects is List<TeamTaskManager.Models.Project> latestProjects && latestProjects.Any())
+                            {
+                                <table class="table table-bordered table-sm text-end">
+                                    <thead class="table-success text-dark">
+                                        <tr>
+                                            <th>عنوان</th>
+                                            <th>وضعیت</th>
+                                            <th>تاریخ ایجاد</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-dark">
+                                        @foreach (var project in latestProjects)
+                                        {
+                                            <tr>
+                                                <td>@project.Title</td>
+                                                <td>
+                                                    @if (project.IsActive)
+                                                    {
+                                                        <span class="badge bg-success">فعال</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-secondary">غیرفعال</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @(project.CreatedAt != null
+                                  ? project.CreatedAt.Value.ToShamsi(true)
+                                  : "تاریخ نامشخص")
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <p class="text-muted">پروژه‌ای یافت نشد.</p>
+                            }
+
+                            <!-- دکمه‌ها -->
+                            <div class="d-flex flex-wrap gap-2 mt-3 justify-content-start">
+                                <a asp-controller="Projects" asp-action="Index" class="btn btn-outline-primary btn-sm rounded-pill px-3 py-1">
+                                    👁 مشاهده جزئیات
+                                </a>
+
+                                <a asp-controller="Projects" asp-action="Create" class="btn btn-outline-success btn-sm rounded-pill px-3 py-1">
+                                    🗓 ایجاد برنامه‌ریزی روزانه
+                                </a>
+
+                                <a asp-controller="Projects" asp-action="CreateGroupProject" class="btn btn-outline-info btn-sm rounded-pill px-3 py-1">
+                                    👥 ایجاد پروژه گروهی
+                                </a>
+
+                                <a asp-controller="Projects" asp-action="CreateKanbanBoard" class="btn btn-outline-warning btn-sm rounded-pill px-3 py-1">
+                                    📋 ایجاد بورد کانبان
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- جزئیات مالی -->
+                    <div id="paymentDetails" class="detail-section d-none mt-4">
+                        <div class="card p-3 text-end bg-white border text-dark">
+                            <!-- اضافه شد text-dark -->
+                            <h5 class="text-warning">💰 جزئیات مالی</h5>
+
+                            <p>تعداد کل پرداخت‌های موفق: <strong>@ViewBag.TotalPayments</strong></p>
+
+                            <div class="d-flex flex-wrap justify-content-between align-items-center mt-3 gap-2">
+                                <!-- مجموع پرداخت‌ها -->
+                                <span class="badge bg-success fs-6">
+                                    💵 مجموع پرداخت‌ها: @ViewBag.TotalPaidAmount تومان
+                                </span>
+
+                                <!-- دکمه‌ها -->
+                                <div class="d-flex gap-1 flex-wrap">
+                                    <a asp-controller="Admin" asp-action="PaymentsList" class="btn btn-outline-info btn-sm rounded-pill">
+                                        💳 لیست پرداخت‌ها
+                                    </a>
+
+                                    <button onclick="toggleDetails('recentPayments')" class="btn btn-outline-warning btn-sm rounded-pill">
+                                        📄 پرداخت‌های اخیر
+                                    </button>
+
+                                    <button onclick="toggleFinanceInner('paymentChartSection')" class="btn btn-outline-primary btn-sm rounded-pill">
+                                        📊 نمودار پرداخت‌ها
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- نمودار -->
+                            <div id="paymentChartSection" class="d-none mt-4">
+                                <h6 class="text-primary mb-2">📊 نمودار تراکنش‌ها</h6>
+                                <canvas id="paymentChart" height="80"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- آخرین پرداخت‌های موفق -->
+                    <div id="recentPayments" class="detail-section d-none mt-4">
+                        <div class="card p-3 bg-white border text-end text-dark">
+                            <!-- اضافه شد text-dark -->
+                            <h5 class="text-success mb-3">📄 آخرین پرداخت‌های موفق</h5>
+
+
+                            @if (ViewBag.LatestPayments is List<TeamTaskManager.Models.Payment> latestPayments && latestPayments.Any())
+                            {
+                                <table class="table table-bordered table-sm text-end text-dark">
+
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>نام کاربر</th>
+                                            <th>مبلغ پرداخت</th>
+                                            <th>پروژه مربوطه</th>
+                                            <th>تاریخ پرداخت</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var payment in latestPayments)
+                                        {
+                                            <tr>
+                                                <td>@(payment.User?.FullName ?? "نامشخص")</td>
+                                                <td>@($"{payment.Amount:N0} تومان")</td>
+                                                <td>@(payment.Project?.Title ?? "بدون پروژه")</td>
+                                                <td>@(payment.PaymentDate.ToShamsi(true))</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+                                <div class="alert alert-light border-start border-success mt-3">
+                                    💰 جمع کل این ۳ پرداخت:
+                                    <strong class="text-success">@($"{ViewBag.RecentPaidSum:N0} تومان")</strong>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-muted">پرداخت موفقی یافت نشد 😅</p>
+                            }
+
+
+                            <!-- دکمه برگشت -->
+                            <div class="d-flex justify-content-end mt-3">
+                                <button class="btn btn-outline-secondary btn-sm" onclick="toggleDetails('recentPayments')">
+                                    🔙 بستن
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- کارت: ثبت تبلیغ -->
+                    <div class="col-md-4 mb-3">
+                        <a asp-controller="Ads" asp-action="Create" style="text-decoration: none;">
+                            <div style="background: linear-gradient(135deg, #fff0f6, #ffe0ec); border-radius: 16px; padding: 20px; transition: 0.3s; cursor: pointer;"
+                                 class="shadow-sm border border-pink border-opacity-25 hover-shadow text-center">
+                                <h6 class="text-danger"><i class="bi bi-bullhorn"></i> ثبت تبلیغ</h6>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- کارت: مشاهده نظرات -->
+                    <div class="col-md-4 mb-3">
+                        <a asp-controller="Admin" asp-action="PendingList" style="text-decoration: none;">
+                            <div style="background: linear-gradient(135deg, #f3f9ff, #d4eaff); border-radius: 16px; padding: 20px; transition: 0.3s; cursor: pointer;"
+                                 class="shadow-sm border border-info border-opacity-25 hover-shadow text-center">
+                                <h6 class="text-info"><i class="bi bi-chat-left-text"></i> مشاهده نظرات</h6>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- کارت: مدیریت وظایف پروژه‌ها -->
+                    <div class="col-md-4 mb-3">
+                        <a asp-controller="Admin" asp-action="ManageTasks" style="text-decoration: none;">
+                            <div style="background: linear-gradient(135deg, #f1ffe7, #e0ffd0); border-radius: 16px; padding: 20px; transition: 0.3s; cursor: pointer;"
+                                 class="shadow-sm border border-success border-opacity-25 hover-shadow text-center">
+                                <h6 class="text-success"><i class="bi bi-kanban"></i> مدیریت وظایف </h6>
+                            </div>
+                        </a>
+                    </div>
+
+
+
+                    <script>
+                        function toggleDetails(id) {
+                            const element = document.getElementById(id);
+
+                            // بستن سایر بخش‌ها
+                            document.querySelectorAll('.detail-section').forEach(e => {
+                                if (e !== element) {
+                                    e.classList.add('d-none');
+                                    e.classList.remove('fade-in');
+                                }
+                            });
+
+                            // باز یا بسته کردن بخش انتخاب‌شده
+                            if (element.classList.contains('d-none')) {
+                                element.classList.remove('d-none');
+                                element.classList.add('fade-in');
+
+                                // اسکرول نرم به بخش نمایش‌داده‌شده
+                                setTimeout(() => {
+                                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                }, 200);
+                            } else {
+                                element.classList.add('d-none');
+                                element.classList.remove('fade-in');
+                            }
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    function toggleDetails(id) {
+        const element = document.getElementById(id);
+        document.querySelectorAll('.detail-section').forEach(e => {
+            if (e !== element) {
+                e.classList.add('d-none');
+                e.classList.remove('fade-in');
+            }
+        });
+        if (element.classList.contains('d-none')) {
+            element.classList.remove('d-none');
+            element.classList.add('fade-in');
+        } else {
+            element.classList.add('d-none');
+            element.classList.remove('fade-in');
+        }
+    }
+
+    // فقط برای داخل paymentDetails
+    function toggleFinanceInner(id) {
+        const inner = document.getElementById(id);
+        const allInnerSections = ['paymentChartSection', 'recentPayments'];
+        allInnerSections.forEach(sectionId => {
+            const el = document.getElementById(sectionId);
+            if (el && el !== inner) {
+                el.classList.add('d-none');
+                el.classList.remove('fade-in');
+            }
+        });
+
+        if (inner.classList.contains('d-none')) {
+            inner.classList.remove('d-none');
+            inner.classList.add('fade-in');
+
+            // اگه نمودار بود، با تاخیر رسمش کنیم
+            if (id === 'paymentChartSection') {
+                requestAnimationFrame(() => {
+                    drawChart();
+                });
+            }
+        } else {
+            inner.classList.add('d-none');
+            inner.classList.remove('fade-in');
+        }
+    }
+
+    // تابع رسم نمودار
+    function drawChart() {
+        const chartLabels = @Html.Raw(Json.Serialize(ViewBag.ChartLabels ?? new List<string>()));
+        const chartValues = @Html.Raw(Json.Serialize(ViewBag.ChartValues ?? new List<int>()));
+        const ctx = document.getElementById('paymentChart');
+
+        if (ctx && chartLabels.length && chartValues.length) {
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: 'تعداد پرداخت‌ها',
+                        data: chartValues,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    }
+</script>

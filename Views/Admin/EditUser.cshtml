@@ -1,0 +1,60 @@
+﻿@model TeamTaskManager.ViewModels.EditUserViewModel
+@{
+    ViewData["Title"] = "ویرایش کاربر";
+}
+
+<section class="container my-5 d-flex justify-content-center">
+    <div class="card w-100 shadow rounded-4 border-0" style="background-color: #000000; max-width: 900px;">
+        <div class="row p-4">
+            <!-- پروفایل -->
+            <div class="col-md-5 mb-4 mb-md-0 d-flex flex-column align-items-center justify-content-center">
+                <img src="@Url.Content(Model?.ProfileImage ?? "~/assets/img/team-4.jpg")"
+                     class="img-fluid rounded-circle mb-3"
+                     style="width: 140px; height: 140px; object-fit: cover;" />
+                <h5 class="text-light">@Model.FullName</h5>
+                <span class="badge bg-@(Model.Role == "Admin" ? "danger" : "secondary")">@Model.Role</span>
+                <p class="text-muted text-center mt-2 small">اطلاعات قابل ویرایش در سمت راست نمایش داده شده‌اند.</p>
+            </div>
+
+            <!-- فرم ویرایش -->
+            <div class="col-md-7">
+                <h4 class="mb-4 text-light">
+                    <i class="bi bi-pencil-square"></i> ویرایش اطلاعات کاربر
+                </h4>
+
+                <form asp-action="EditUser" method="post">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="form-group mb-3">
+                        <label class="text-light">نام کامل</label>
+                        <input asp-for="FullName" class="form-control rounded-3" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="text-light">ایمیل</label>
+                        <input asp-for="Email" class="form-control rounded-3" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label class="text-light">نقش</label>
+                        <select asp-for="Role" class="form-control rounded-3">
+                            <option value="User">کاربر عادی</option>
+                            <option value="Admin">مدیر</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success rounded-pill px-3">
+                            <i class="bi bi-check-circle"></i> ذخیره تغییرات
+                        </button>
+                        <a asp-action="UsersList" class="btn btn-outline-light rounded-pill px-3">
+                            <i class="bi bi-arrow-right-circle"></i> بازگشت
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

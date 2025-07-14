@@ -1,0 +1,59 @@
+﻿@model List<TeamTaskManager.Models.Comment>
+@using TeamTaskManager.Extensions
+<link href="~/lib/bootstrap/bootstrap-icons.css" rel="stylesheet" />
+
+@{
+    ViewData["Title"] = "نظرات در انتظار تایید";
+}
+
+<section class="container my-5">
+    <div class="rounded-3 p-4 shadow" style="background-color: #121212; border: 2px solid #000000; color: white;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="text-success mb-0">
+                <i class="bi bi-chat-left-text"></i> نظرات در انتظار تأیید
+            </h4>
+
+            <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-outline-secondary btn-sm rounded-pill">
+                🔙 بازگشت
+            </a>
+        </div>
+
+        @if (Model == null || !Model.Any())
+        {
+            <div class="alert alert-warning text-center text-dark">
+                نظری برای تأیید وجود ندارد.
+            </div>
+        }
+        else
+        {
+            <table class="table table-bordered table-striped text-end table-dark align-middle rounded-3">
+                <thead class="table-success">
+                    <tr>
+                        <th>کاربر</th>
+                        <th>محتوای نظر</th>
+                        <th>تاریخ ثبت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var comment in Model)
+                    {
+                        <tr>
+                            <td>@(comment.User?.FullName ?? "ناشناس")</td>
+                            <td>@comment.Text</td>
+                            <td>@comment.CreatedAt.ToShamsi(true)</td>
+                            <td class="d-flex gap-2">
+                                <a asp-action="ApproveComment" asp-route-id="@comment.Id" class="btn btn-outline-success btn-sm rounded-pill">
+                                    ✔ تایید
+                                </a>
+                                <a asp-action="DeleteComment" asp-route-id="@comment.Id" class="btn btn-outline-danger btn-sm rounded-pill">
+                                    🗑 حذف
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</section>

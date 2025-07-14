@@ -1,0 +1,69 @@
+﻿@model TeamTaskManager.Models.Ad
+
+@{
+    ViewData["Title"] = "ویرایش تبلیغ";
+}
+
+<div class="container mt-5 mb-5" style="max-width: 700px;">
+    <div class="card shadow-sm border border-success border-opacity-25 rounded-4 p-4">
+        <h4 class="text-center mb-4 text-success">
+            <i class="bi bi-pencil-square"></i> @ViewData["Title"]
+        </h4>
+
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label">عنوان تبلیغ</label>
+                <input asp-for="Title" class="form-control form-control-sm" placeholder="مثلاً: تخفیف پاییزی" />
+                <span asp-validation-for="Title" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Link" class="form-label">لینک تبلیغ</label>
+                <input asp-for="Link" class="form-control form-control-sm" placeholder="https://..." />
+                <span asp-validation-for="Link" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">عکس فعلی</label><br />
+                <img src="@Url.Content("~/" + Model.ImageUrl + "?t=" + DateTime.Now.Ticks)"
+                     class="img-thumbnail rounded-3 shadow-sm mt-2"
+                     style="max-height: 150px;" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">انتخاب عکس جدید (اختیاری)</label>
+                <input type="file" name="ImageFile" class="form-control form-control-sm" accept="image/*" onchange="previewImage(event)" />
+            </div>
+
+            <div class="text-center mb-3">
+                <img id="preview" src="#" alt="پیش‌نمایش" class="img-thumbnail rounded-3 shadow-sm d-none" style="max-height: 150px;" />
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <button type="submit" class="btn btn-outline-success px-4 rounded-3">
+                    💾 ذخیره تغییرات
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary px-4 rounded-3">
+                    🔙 برگشت
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const preview = document.getElementById('preview');
+                preview.src = URL.createObjectURL(file);
+                preview.classList.remove('d-none');
+            }
+        }
+    </script>
+}

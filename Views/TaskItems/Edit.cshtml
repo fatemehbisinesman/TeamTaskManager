@@ -1,0 +1,66 @@
+﻿@model TeamTaskManager.Models.TaskItem
+
+@{
+    ViewData["Title"] = "ویرایش وظیفه";
+}
+
+<div class="container d-flex justify-content-center mt-5">
+    <div class="card border-success rounded-4 shadow-sm p-4" style="max-width: 500px; width: 100%;">
+        <h4 class="text-center text-success mb-4">✏️ ویرایش وظیفه</h4>
+
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label asp-for="Title" class="form-label">عنوان</label>
+                <input asp-for="Title" class="form-control rounded-pill" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Status" class="form-label">وضعیت</label>
+                <select asp-for="Status" class="form-select rounded-pill">
+                    <option value="Doing">در حال انجام</option>
+                    <option value="Completed">تکمیل شده</option>
+                    <option value="Canceled">لغو شده</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Deadline" class="form-label">موعد انجام</label>
+                <input asp-for="Deadline" class="form-control rounded-pill" placeholder="yyyy/mm/dd" />
+                <span asp-validation-for="Deadline" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Priority" class="form-label">اولویت</label>
+                <select asp-for="Priority" class="form-select rounded-pill">
+                    <option value="1">پایین</option>
+                    <option value="3">متوسط</option>
+                    <option value="5">بالا</option>
+                </select>
+                <span asp-validation-for="Priority" class="text-danger"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="ProjectId" class="form-label">پروژه</label>
+                <select asp-for="ProjectId" class="form-select rounded-pill" asp-items="ViewBag.ProjectId"></select>
+                <span asp-validation-for="ProjectId" class="text-danger"></span>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-success rounded-pill">💾 ذخیره تغییرات</button>
+            </div>
+        </form>
+
+        <div class="text-center mt-3">
+            <a asp-action="Index" class="btn btn-outline-secondary rounded-pill">🔙 بازگشت به لیست</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

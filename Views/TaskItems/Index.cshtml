@@ -1,0 +1,114 @@
+﻿@model IEnumerable<TeamTaskManager.Models.TaskItem>
+@using TeamTaskManager.Extensions
+
+@{
+    ViewData["Title"] = "لیست وظایف";
+    var projectId = Context.Request.Query["projectId"];
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+
+<style>
+    .task-card {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 25px;
+        border: 2px solid #28a745;
+        border-radius: 15px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(40, 167, 69, 0.3);
+    }
+
+    table th, table td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .table thead {
+        background-color: #e9f5e9;
+    }
+</style>
+
+<div class="task-card">
+    <h3 class="text-center text-success mb-4">📋 لیست وظایف پروژه</h3>
+
+    <div class="d-flex justify-content-between mb-3">
+        <a class="btn btn-success" asp-action="Create" asp-route-projectId="@projectId">
+            ➕ ایجاد وظیفه جدید
+        </a>
+        <a class="btn btn-outline-secondary" asp-controller="GroupProjects" asp-action="Dashboard" asp-route-id="@projectId">
+            بازگشت به پروژه
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            هیچ وظیفه‌ای ثبت نشده است.
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>عنوان</th>
+                    <th>وضعیت</th>
+                    <th>موعد</th>
+                    <th>اولویت</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>
+                        @switch (item.Status)
+                        {
+                            case TeamTaskManager.Models.TaskStatus.Doing:
+                                @:در حال انجام
+                                break;
+                            case TeamTaskManager.Models.TaskStatus.Completed:
+                                @:تکمیل شده
+                                break;
+                            case TeamTaskManager.Models.TaskStatus.Canceled:
+                                @:لغو شده
+                                break;
+                        }
+                    </td>
+                    <td>@item.CreatedAt.ToShamsi()</td>
+
+                    <td>
+                        @switch (item.Priority)
+                        {
+                            case TeamTaskManager.Models.PriorityLevel.Low:
+                                @:پایین
+                                break;
+                            case TeamTaskManager.Models.PriorityLevel.Medium:
+                                @:متوسط
+                                break;
+                            case TeamTaskManager.Models.PriorityLevel.High:
+                                @:بالا
+                                break;
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary" title="ویرایش">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info" title="جزئیات">
+                            <i class="bi bi-info-circle"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="حذف"
+                           onclick="return confirm('آیا از حذف این وظیفه مطمئن هستید؟')">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

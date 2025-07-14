@@ -1,0 +1,35 @@
+﻿@model TeamTaskManager.Models.User
+
+@{
+    ViewData["Title"] = "ویرایش کاربر";
+}
+
+<section div class="container my-5" style="max-width: 600px;">
+    <div class="card shadow-sm p-4 rounded-4 text-end">
+        <h4 class="mb-4 text-primary">✏️ ویرایش پروفایل</h4>
+
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label asp-for="FullName" class="form-label">نام کامل</label>
+                <input asp-for="FullName" class="form-control" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label">ایمیل</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-success">💾 ذخیره تغییرات</button>
+            <a asp-action="Dashboard" class="btn btn-secondary">🔙 بازگشت</a>
+        </form>
+    </div>
+</div>
+</section>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

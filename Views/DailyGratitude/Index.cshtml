@@ -1,0 +1,116 @@
+﻿@model List<TeamTaskManager.Models.DailyGratitude>
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "شکرگزاری‌های روزانه";
+    var pc = new PersianCalendar();
+    string activeTab = ViewBag.ActiveTab as string ?? "شنبه";
+
+    string GetDayName(DateTime date)
+    {
+        var dayOfWeek = pc.GetDayOfWeek(date);
+        return dayOfWeek switch
+        {
+            DayOfWeek.Saturday => "شنبه",
+            DayOfWeek.Sunday => "یکشنبه",
+            DayOfWeek.Monday => "دوشنبه",
+            DayOfWeek.Tuesday => "سه‌شنبه",
+            DayOfWeek.Wednesday => "چهارشنبه",
+            DayOfWeek.Thursday => "پنجشنبه",
+            DayOfWeek.Friday => "جمعه",
+            _ => "شنبه"
+        };
+    }
+
+    var daysOfWeek = new[] { "شنبه", "یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه" };
+    var grouped = Model.GroupBy(x => GetDayName(x.Date)).ToDictionary(g => g.Key, g => g.ToList());
+}
+
+<div class="container mt-5 mb-5" style="max-width: 1000px;">
+
+    <!-- هدر -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex align-items-center gap-2 border border-success px-3 py-2 rounded-3 shadow-sm bg-white">
+            <i class="bi bi-journal-heart text-success fs-5"></i>
+            <h4 class="m-0 fw-bold text-success">شکرگزاری‌های روزانه من</h4>
+        </div>
+
+        <a asp-action="Create" class="btn btn-success btn-sm rounded-pill shadow-sm">
+            <i class="bi bi-plus-circle"></i> افزودن شکرگزاری جدید
+        </a>
+    </div>
+
+    <!-- تب‌های روزهای هفته -->
+    <ul class="nav nav-pills nav-justified mb-4 bg-light rounded-4 shadow-sm p-2">
+        @foreach (var day in daysOfWeek)
+        {
+            var isActive = day == activeTab ? "active" : "";
+            <li class="nav-item">
+                <a class="nav-link @isActive fw-bold text-dark" data-bs-toggle="tab" href="#@day">
+                    <i class="bi bi-calendar-week"></i> @day
+                </a>
+            </li>
+        }
+    </ul>
+
+    <!-- محتوای تب‌ها -->
+    <!-- محتوای تب‌ها -->
+    <div class="tab-content bg-white border border-success border-2 rounded-4 shadow-sm p-4">
+
+        @foreach (var day in daysOfWeek)
+        {
+            var isActive = day == activeTab ? "show active" : "";
+            <div class="tab-pane fade @isActive" id="@day">
+                @if (!grouped.ContainsKey(day) || !grouped[day].Any())
+                {
+                    <div class="alert alert-light border border-warning text-center shadow-sm">
+                        <i class="bi bi-emoji-frown text-warning"></i> برای این روز هنوز شکرگزاری ثبت نشده است.
+                    </div>
+                }
+                else
+                {
+                    <div class="list-group">
+                        @foreach (var item in grouped[day])
+                        {
+                            var dateText = $"{pc.GetYear(item.Date)}/{pc.GetMonth(item.Date):00}/{pc.GetDayOfMonth(item.Date):00}";
+                            <div class="list-group-item list-group-item-action shadow-sm mb-3 rounded-4 border border-success">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <p class="mb-1 fw-bold text-success">💚 @item.Text</p>
+                                        <small class="text-muted">📅 @dateText | 🗓️ @day</small>
+                                    </div>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" onsubmit="return confirm('آیا مطمئن هستی؟');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill shadow-sm">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+
+    </div>
+</div>
+@section Styles {
+    <style>
+        .nav-pills .nav-link.active {
+            background-color: #198754 !important;
+            color: white !important;
+        }
+
+        .nav-pills .nav-link {
+            transition: 0.3s;
+        }
+
+            .nav-pills .nav-link:hover {
+                background-color: #e6f4ea;
+            }
+
+        .list-group-item {
+            background-color: #f9fdf9;
+        }
+    </style>
+}

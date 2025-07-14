@@ -1,0 +1,49 @@
+﻿@model TeamTaskManager.Models.DailyGratitude
+
+@{
+    ViewData["Title"] = "ثبت شکرگزاری جدید";
+}
+
+<div class="container d-flex justify-content-center mt-5 mb-5">
+    <div class="card border-success border-2 rounded-4 shadow-lg w-100" style="max-width: 700px;">
+        <div class="card-header bg-success text-white text-center rounded-top">
+            <h5 class="mb-0">🙏 ثبت شکرگزاری روزانه</h5>
+        </div>
+
+        <div class="card-body bg-light">
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger text-center">@TempData["Error"]</div>
+            }
+
+            <form asp-action="Create" method="post" class="px-3">
+                @Html.AntiForgeryToken()
+
+                <div class="form-group mb-4">
+                    <label asp-for="Text" class="form-label fw-bold text-success">متن شکرگزاری</label>
+                    <textarea asp-for="Text" class="form-control rounded-3 shadow-sm border-success" rows="5" placeholder="مثلاً: بابت آرامش ذهنم شکرگزارم..."></textarea>
+                    <span asp-validation-for="Text" class="text-danger small d-block mt-1"></span>
+                </div>
+
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <button type="submit" class="btn btn-success px-4 shadow-sm rounded-pill">
+                        <i class="bi bi-check-circle"></i> ثبت
+                    </button>
+
+                    <a asp-action="Index" class="btn btn-outline-secondary px-4 shadow-sm rounded-pill">
+                        <i class="bi bi-arrow-bar-right"></i> بازگشت
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $("form").on("submit", function () {
+            console.log("Form submitted...");
+        });
+    </script>
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

@@ -1,0 +1,65 @@
+﻿@model List<TeamTaskManager.Models.TaskItem>
+
+@{
+    ViewData["Title"] = "وظایف من";
+}
+
+<div class="container my-5 d-flex justify-content-center">
+    <div class="card bg-dark text-white shadow-lg rounded-4 w-100" style="max-width: 900px;">
+        <div class="card-header bg-success text-white text-center rounded-top-4">
+            <h4 class="mb-0"><i class="bi bi-kanban-fill"></i> وظایف </h4>
+        </div>
+        <div class="card-body bg-dark rounded-bottom-4">
+
+            @if (Model.Count == 0)
+            {
+                <p class="text-center text-muted">هیچ وظیفه‌ای برای شما ثبت نشده است.</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered text-white table-striped table-dark">
+                        <thead class="table-success text-dark text-center">
+                            <tr>
+                                <th>عنوان</th>
+                                <th>توضیحات</th>
+                                <th>وضعیت</th>
+                                <th>موعد انجام</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var task in Model)
+                            {
+                                <tr class="text-center">
+                                    <td>@task.Title</td>
+                                    <td>@task.Description</td>
+                                    <td>
+                                        @switch (task.Status)
+                                        {
+                                            case TeamTaskManager.Models.TaskStatus.Doing:
+                                                @:<span class="badge bg-warning text-dark">در حال انجام</span>
+                                                break;
+                                            case TeamTaskManager.Models.TaskStatus.Completed:
+                                                @:<span class="badge bg-success">تکمیل شده</span>
+                                                break;
+                                            case TeamTaskManager.Models.TaskStatus.Canceled:
+                                                @:<span class="badge bg-danger">لغو شده</span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td>@task.Deadline?.ToString("yyyy/MM/dd")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+            <div class="text-center mt-4">
+                <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-outline-light px-4 py-2 rounded-pill">
+                    <i class="bi bi-arrow-right-circle"></i> بازگشت
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

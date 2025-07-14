@@ -1,0 +1,472 @@
+﻿@model IEnumerable<TeamTaskManager.Models.Ad>
+@using Microsoft.AspNetCore.Http
+
+@{ ViewData["Title"] = "صفحه اصلی"; }
+@if (TempData["CommentSuccess"] != null)
+{
+    <div class="alert alert-success text-center rounded-3">
+        @TempData["CommentSuccess"]
+    </div>
+}
+
+<section id="intro">
+    <div class="intro-container">
+        <div id="introCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+
+            <ol class="carousel-indicators"></ol>
+
+            <div class="carousel-inner" role="listbox" dir="ltr">
+
+                <div class="carousel-item active" style="background-image: url('/assets/img/intro-carousel/1.jpg')">
+                    <div class="carousel-container">
+                        <div class="container" dir="rtl">
+                            <h2 class="animate_animated animate_fadeInDown">مدیریت تیمی ساده تر از همیشه با تسکوریا</h2>
+                            <p class="animate_animated animate_fadeInUp">
+                                باتسکوریا،وظایف و پروژه هات رو ساختارمند مدیریت کن،زمان رو بهینه کن و ارتباط تیمی ات تقویت کن.
+                            </p>
+                            <a href="/Auth/Register" class="btn-get-started scrollto animate_animated animate_fadeInUp">شروع مدیریت تیم</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="carousel-item" style="background-image: url('/assets/img/intro-carousel/2.jpg')">
+                    <div class="carousel-container">
+                        <div class="container" dir="rtl">
+                            <h2 class="animate_animated animate_fadeInDown">ویژگی های سیستم تسکوریا</h2>
+                            <p class="animate_animated animate_fadeInUp">
+                                سیستمسی یکپارچه برای مدیریت پروژه ها ،وظایف ،تیم و پرداخت ها با طراحی وامنش گراو کاربرپسند.مدیریت آسان و دقیق کارهای تیمی را تجربه کنید.
+                            </p>
+                            <a href="#services" class="btn-get-started scrollto animate_animated animate_fadeInUp">مشاهده ویژگی ها</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="carousel-item" style="background-image: url('/assets/img/intro-carousel/3.jpg')">
+                    <div class="carousel-container">
+                        <div class="container" dir="rtl">
+                            <h2 class="animate_animated animate_fadeInDown">مدیریت مالی پروژه ها به صورت یکپارچه</h2>
+                            <p class="animate_animated animate_fadeInUp">
+                                هزینه پروژه ها روبه راحتی مدیریت کن،پرداخت ها رو پیگیری کن و گزارش مالی کامل بگیر _ همه دریک سیستم
+                            </p>
+                            <a href="#contact" class="btn-get-started scrollto animate_animated animate_fadeInUp">بیشتر بدانید</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <a class="carousel-control-prev" href="#introCarousel" role="button" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon ion-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">قبلی</span>
+            </a>
+            <a class="carousel-control-next" href="#introCarousel" role="button" data-bs-slide="next">
+                <span class="carousel-control-next-icon ion-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">بعدی</span>
+            </a>
+
+        </div>
+    </div>
+</section>
+<section id="about" class="about section-bg py-5">
+    <div class="container" data-aos="fade-up">
+        <div class="section-header text-center mb-4">
+            <h3>درباره تسکوریا</h3>
+            <p>راهکاری هوشمند برای مدیریت پروژه‌ها و وظایف تیمی</p>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 content">
+                <h4>چالش چیست؟</h4>
+                <p>
+                    امروزه تیم‌ها و سازمان‌ها با چالش‌های متعددی مانند بی‌نظمی، عدم شفافیت، تأخیر در انجام کارها و سردرگمی اعضا روبه‌رو هستند. نبود یک سیستم یکپارچه برای مدیریت پروژه‌ها و وظایف، تأثیر زیادی بر کاهش بهره‌وری دارد.
+                </p>
+
+                <h4>تسکوریا چه می‌کند؟</h4>
+                <p>
+                    تسکوریا با ارائه بستری ساختاریافته، امکان تعریف پروژه‌ها، تخصیص وظایف، پیگیری وضعیت، مدیریت اعضا، گزارش‌گیری، پرداخت آنلاین و ارتباط مؤثر بین اعضای تیم را فراهم می‌کند.
+                </p>
+
+                <h4>هدف ما</h4>
+                <p>
+                    هدف ما، ارتقای بهره‌وری تیم‌ها، کاهش اتلاف زمان و ساده‌سازی فرآیند مدیریت پروژه‌هاست.
+                </p>
+            </div>
+
+            <div class="col-lg-6 text-center">
+                <img src="/assets/img/about-bg.jpg" class="img-fluid rounded shadow" alt="درباره تسکوریا" />
+            </div>
+        </div>
+    </div>
+</section>
+@* ✅ تبلیغات داینامیک *@
+<div class="row mt-4">
+    @foreach (var ad in Model)
+    {
+<div class="col-md-4 mb-4">
+    <div class="card shadow-sm h-100">
+        <img src="@Url.Content("~/" + ad.ImageUrl)" class="card-img-top" alt="@ad.Title" style="height: 200px; object-fit: cover;">
+        <div class="card-body">
+            <h5 class="card-title">@ad.Title</h5>
+            <p class="card-text">@ad.Link</p>
+            <a href="@ad.Link" target="_blank" class="btn btn-primary">مشاهده</a>
+        </div>
+
+    </div>
+</div>}
+</div>
+
+<section id="services" class="services">
+    <div class="container">
+        <div class="section-header">
+            <h3>ویژگی های سیستم تسکوریا</h3>
+            <p>توضیحاتی درباره سرویس‌های ارائه شده.</p>
+        </div>
+        <div class="row">
+            <!-- تکرار این بلوک برای هر سرویس -->
+            <div class="col-lg-4 col-md-6">
+                <div class="box">
+                    <div class="icon"><i class="fa fa-tasks"></i></div>
+                    <h4 class="title"><a href="">مدیریت پروژه و وظایف</a></h4>
+                    <p class="description">امکان ساخت پروژه ، تعیین وظایف ،تنظیم مهلت و اولویت،تغییروضعیت(درحال انجام،تکمیل شده،لغوشده </p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="box">
+                    <div class="icon"><i class="fa fa-columns"></i></div>
+                    <h4 class="title"><a href="">تابلو کانبان و لیست وظایف</a></h4>
+                    <p class="description">نمایش وظایف به صورت بصری درقالب لیست یا بورد برای تسهیل در پیگیری مراحل پروژه. </p>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="box">
+                    <div class="icon"><i class="fa fa-users"></i></div>
+                    <h4 class="title"><a href="">سیستم کاربران پیشرفته</a></h4>
+                    <p class="description">ثبت نام و ورود با نقش های مختلف (کاربر عادی و مدیر)،به همراه همراه میدیریت سطح دسترسی.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="box">
+                    <div class="icon"><i class="fa fa-credit-card"></i></div>
+                    <h4 class="title"><a href="">بخش مالی و پرداخت آنلاین</a></h4>
+                    <p class="description">امکان پرداخت هزینه پروژه ها و مدیریت تراکنش ها به یورت یکپارچه از داخل سیستم.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="box">
+                    <div class="icon"><i class="fa fa-bar-chart"></i></div>
+                    <h4 class="title"><a href="">گزارش گیری آمار</a></h4>
+                    <p class="description">ارائه نمودار ها واطلاعات آماری درباره پیشرفت پروژه ها،وظایف و عملکرد کلی تیم.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="box">
+                    <div class="icon"><i class="fa fa-bullhorn"></i></div>
+                    <h4 class="title"><a href="">اطلاع رسانی و خبرنامه</a></h4>
+                    <p class="description">امکان ارسال پیام،اعلان ها و پیشنهادات ویژه از طرف مدیر سیستم به کاربران.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="box">
+                    <div class="icon"><i class="fa fa-mobile"></i></div>
+                    <h4 class="title"><a href="">طراحی واکنش گرا و کاربرپسند</a></h4>
+                    <p class="description">با استفاده از بوتاسترپو فناوری های روز ،تجربه کاربران جذاب روی موبایل ،تبلت و دسکتاپ.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="box">
+                    <div class="icon"><i class="bi bi-person-bounding-box"></i></div>
+                    <h4 class="title"><a href="">مدیریت اعضای تیم در پروژه</a></h4>
+                    <p class="description">امکان تخصیص افراد مختلف به وظایف پروژه ،برای بهبود همکاری گروهی و پیگیری دقیق تر پیشرفت کارها.</p>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="box">
+                    <div class="icon"><i class="fa fa-user-circle"></i></div>
+                    <h4 class="title"><a href="">پروفایل کاربری قابل ویرایش</a></h4>
+                    <p class="description">هر کاربر میتونه اطلاعات پروفایلش از جمله نام ،ایمیل رمزعبورو تصویر پروفایل رو تغییر بده و حساب کاربری خودشو مدیریت کنه.</p>
+                </div>
+            </div>
+            <!-- ... -->
+        </div>
+    </div>
+</section>
+
+
+<section id="facts" class="facts section-bg">
+    <div class="container">
+        <div class="section-header">
+            <h3>وضعیت‌های سیستم</h3>
+            <p>آمار کلی از عملکرد تسکوریا در مدیریت پروژه‌ها و کاربران</p>
+        </div>
+
+        <div class="row counters">
+            <div class="col-lg-3 col-6 text-center">
+                <span data-toggle="counter-up">158</span>
+                <p>پروژه‌های ثبت‌شده</p>
+            </div>
+
+            <div class="col-lg-3 col-6 text-center">
+                <span data-toggle="counter-up">92</span>
+                <p>پروژه‌های تکمیل‌شده</p>
+            </div>
+
+            <div class="col-lg-3 col-6 text-center">
+                <span data-toggle="counter-up">45</span>
+                <p>کاربران فعال</p>
+            </div>
+
+            <div class="col-lg-3 col-6 text-center">
+                <span data-toggle="counter-up">28</span>
+                <p>تسویه‌های مالی موفق</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="portfolio" class="portfolio section-bg">
+    <div class="container" data-aos="fade-up">
+
+        <div class="section-header text-center">
+            <h3 class="section-title">نمونه پروژه‌های تسکوریا</h3>
+            <p>برخی از پروژه‌های نمونه که در سیستم تسکوریا قابل اجرا هستند:</p>
+        </div>
+
+        <div class="row" data-aos="fade-up" data-aos-delay="100">
+            <div class="col-lg-12 d-flex justify-content-center">
+                <ul id="portfolio-flters" class="list-unstyled d-flex gap-3">
+                    <li data-filter="*" class="filter-active">همه</li>
+                    <li data-filter=".filter-kanban"> مدریت طراحی سایت</li>
+                    <li data-filter=".filter-finance">برنامه ریزی روزانه</li>
+                    <li data-filter=".filter-ui">مدیریت کار تیمی</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row portfolio-container mt-4" data-aos="fade-up" data-aos-delay="200">
+
+            <!-- پروژه مالی -->
+            <div class="col-lg-4 col-md-6 portfolio-item filter-finance">
+                <div class="card border-0 shadow-sm h-100">
+                    <img src="@Url.Content("~/assets/img/portfolio/web1.jpg")" class="card-img-top" style="height: 200px; object-fit: cover;" alt="ماژول مالی">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">ماژول مالی</h5>
+                        <p class="card-text small">پرداخت و فاکتورهای پروژه‌ها</p>
+                        <a href="#contact" class="btn btn-sm btn-outline-primary mt-2">درخواست پروژه مشابه</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- پروژه تابلو کانبان -->
+            <div class="col-lg-4 col-md-6 portfolio-item filter-kanban">
+                <div class="card border-0 shadow-sm h-100">
+                    <img src="@Url.Content("~/assets/img/portfolio/web2.jpg")" class="card-img-top" style="height: 200px; object-fit: cover;" alt="تابلو کانبان">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">تابلو کانبان</h5>
+                        <p class="card-text small">نمایش وظایف به صورت Drag & Drop</p>
+                        <a href="#contact" class="btn btn-sm btn-outline-primary mt-2">درخواست پروژه مشابه</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- پروژه داشبورد مدیریتی -->
+            <div class="col-lg-4 col-md-6 portfolio-item filter-ui">
+                <div class="card border-0 shadow-sm h-100">
+                    <img src="@Url.Content("~/assets/img/portfolio/web3.jpg")" class="card-img-top" style="height: 200px; object-fit: cover;" alt="داشبورد مدیریتی">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">داشبورد مدیریتی</h5>
+                        <p class="card-text small">کنترل کاربران، پروژه‌ها و گزارش‌ها</p>
+                        <a href="#contact" class="btn btn-sm btn-outline-primary mt-2">درخواست پروژه مشابه</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+<section id="team" class="team section-bg py-5">
+    <div class="container" data-aos="fade-up">
+        <div class="section-header">
+            <h3>تیم تسکوریا</h3>
+            <p>آشنایی با اعضای تیم توسعه‌دهنده پلتفرم مدیریت وظایف تسکوریا</p>
+        </div>
+
+        <div class="row">
+
+            <!-- عضو ۱ -->
+            <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
+                <div class="member">
+                    <img src="~/assets/img/team-1.jpg" alt="مدیر پروژه" class="img-fluid">
+                    <div class="member-info">
+                        <h4>فاطمه مروتی</h4>
+                        <span>مدیر پروژه</span>
+                        <div class="social">
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- عضو ۲ -->
+            <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
+                <div class="member">
+                    <img src="~/assets/img/team-2.jpg" alt="توسعه‌دهنده بک‌اند" class="img-fluid">
+                    <div class="member-info">
+                        <h4>یوزر2 </h4>
+                        <span>توسعه‌دهنده بک‌اند</span>
+                        <div class="social">
+                            <a href="#"><i class="fa fa-github"></i></a>
+                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- عضو ۳ -->
+            <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
+                <div class="member">
+                    <img src="~/assets/img/team-3.jpg" alt="طراح رابط کاربری" class="img-fluid">
+                    <div class="member-info">
+                        <h4>سوگند</h4>
+                        <span>طراح رابط کاربری</span>
+                        <div class="social">
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                            <a href="#"><i class="fa fa-dribbble"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- عضو ۴ -->
+            <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
+                <div class="member">
+                    <img src="~/assets/img/team-4.jpg" alt="تحلیل‌گر سیستم" class="img-fluid">
+                    <div class="member-info">
+                        <h4>یوزر</h4>
+                        <span>تحلیل‌گر سیستم</span>
+                        <div class="social">
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+@{ var isLoggedIn = Context.Session.GetInt32("UserId") != null;
+                var approvedComments = ViewBag.ApprovedComments as List<TeamTaskManager.Models.Comment>; }
+
+<section id="contact" class="contact mt-5">
+    <div class="container">
+
+        <!-- مشخصات تماس -->
+        <div class="section-header text-center mb-5">
+            <h3 class="text-success">ارتباط با ما</h3>
+            <p>نظر یا پیام خود را از طریق فرم زیر ارسال کنید:</p>
+        </div>
+
+        <div class="row contact-info text-center mb-4">
+            <!-- نشانی -->
+            <div class="col-md-4 mb-3">
+                <div class="contact-address">
+                    <i class="fa fa-map-marker fa-2x text-success mb-2"></i>
+                    <h5>نشانی</h5>
+                    <address>شیراز، دانشگاه ملی مهارت دختران</address>
+                </div>
+            </div>
+            <!-- تلفن -->
+            <div class="col-md-4 mb-3">
+                <div class="contact-phone">
+                    <i class="fa fa-phone fa-2x text-success mb-2"></i>
+                    <h5>شماره تماس</h5>
+                    <p><a href="tel:+989375877836">0937 587 7836</a></p>
+                </div>
+            </div>
+            <!-- ایمیل -->
+            <div class="col-md-4 mb-3">
+                <div class="contact-email">
+                    <i class="fa fa-envelope fa-2x text-success mb-2"></i>
+                    <h5>ایمیل</h5>
+                    <p><a href="mailto:fatemehmorovati20@gmail.com">fatemehmorovati20@gmail.com</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- فرم ارسال نظر -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-8">
+                <div class="card shadow-sm border border-success border-opacity-25 rounded-4 p-4">
+                    <h5 class="text-success mb-4 text-center">
+                        <i class="bi bi-chat-dots"></i> ارسال نظر شما
+                    </h5>
+
+                    @if (isLoggedIn)
+                    {
+        <form asp-action="CreateComment" asp-controller="Comments" method="post">
+            <input type="hidden" name="UserId" value="@Context.Session.GetInt32("UserId")" />
+
+            <div class="mb-3">
+                <label for="Text" class="form-label">متن نظر:</label>
+                <textarea name="Text" class="form-control form-control-sm rounded-3"
+                          rows="4" placeholder="نظر خود را بنویسید..." required></textarea>
+            </div>
+
+            <div class="text-end">
+                <button type="submit" class="btn btn-outline-success btn-sm px-4">
+                    📤 ارسال نظر
+                </button>
+            </div>
+        </form> }
+                    else
+                    {
+        <div class="alert alert-warning text-center rounded-3">
+            برای ارسال نظر باید وارد حساب کاربری خود شوید.
+            <br />
+            <a href="/Auth/Register" class="btn btn-outline-primary btn-sm mt-3 px-4">ورود / ثبت‌نام</a>
+        </div>}
+                </div>
+            </div>
+        </div>
+
+        <!-- نمایش نظرات تأیید شده -->
+        <div class="row justify-content-center">
+            <div class="container mt-5">
+                <h5 class="text-center fw-bold text-success mb-4 border-bottom pb-2">
+                    💬 نظرات کاربران
+                </h5>
+
+                @if (approvedComments != null && approvedComments.Any())
+                {
+    @foreach (var comment in approvedComments)
+    {
+<div class="mb-4 pb-3 border-bottom">
+    <div class="d-flex align-items-center mb-2">
+        <i class="bi bi-person-circle text-success fs-4 me-2"></i>
+        <strong>@comment.User?.FullName</strong>
+        <span class="text-muted small ms-2">@comment.CreatedAt.ToString("yyyy/MM/dd")</span>
+    </div>
+    <div class="text-dark">
+        @comment.Text
+    </div>
+</div>} }
+                else
+                {
+    <div class="alert alert-info text-center rounded-3">
+        هنوز نظری ثبت نشده است.
+    </div>}
+            </div>
+
+        </div>
+    </div>
+
+
+</section>
+
+

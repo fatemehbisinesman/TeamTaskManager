@@ -1,0 +1,39 @@
+﻿@model TeamTaskManager.Models.Ad
+
+@{
+    ViewData["Title"] = "جزئیات تبلیغ";
+}
+
+<div class="container mt-5 mb-5" style="max-width: 700px;">
+    <div class="card shadow-sm border border-success border-opacity-25 rounded-4 p-4">
+        <h4 class="text-center mb-4 text-success">
+            <i class="bi bi-info-circle"></i> @ViewData["Title"]
+        </h4>
+
+        <dl class="row">
+            <dt class="col-sm-4 fw-bold text-success">عنوان تبلیغ</dt>
+            <dd class="col-sm-8">@Model.Title</dd>
+
+            <dt class="col-sm-4 fw-bold text-success">لینک</dt>
+            <dd class="col-sm-8">
+                <a href="@Model.Link" target="_blank" class="text-decoration-none text-primary">
+                    🔗 @Model.Link
+                </a>
+            </dd>
+
+            <dt class="col-sm-4 fw-bold text-success">عکس تبلیغ</dt>
+            <dd class="col-sm-8">
+                <img src="~/@Model.ImageUrl" width="220" class="rounded-3 border border-secondary shadow-sm" />
+            </dd>
+        </dl>
+
+        <div class="d-flex justify-content-between mt-4">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-warning px-4 rounded-3">
+                ✏️ ویرایش
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary px-4 rounded-3">
+                🔙 برگشت
+            </a>
+        </div>
+    </div>
+</div>

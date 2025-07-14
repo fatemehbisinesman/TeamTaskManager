@@ -1,0 +1,70 @@
+﻿@model IEnumerable<TeamTaskManager.Models.Ad>
+
+@{
+    ViewData["Title"] = "لیست تبلیغات";
+}
+
+<div class="container mt-4 mb-5" style="max-width: 900px;">
+    <div class="card shadow-sm border border-success border-opacity-25 rounded-4 p-4">
+        <h4 class="text-success mb-4">
+            <i class="bi bi-megaphone"></i> @ViewData["Title"]
+        </h4>
+
+        <div class="mb-3 text-start">
+            <a asp-action="Create" class="btn btn-outline-success px-3 rounded-3">
+                <i class="bi bi-plus-circle"></i> افزودن تبلیغ جدید
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle shadow-sm rounded-4 overflow-hidden">
+                <thead class="table-success rounded-top">
+                    <tr>
+                        <th>عنوان</th>
+                        <th>تصویر</th>
+                        <th>لینک</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Title</td>
+                                <td>
+                                    <img src="~/@item.ImageUrl" width="80" class="rounded-3 border border-1 border-secondary shadow-sm" />
+                                </td>
+                                <td>
+                                    <a href="@item.Link" target="_blank" class="text-decoration-none text-primary">
+                                        🔗 مشاهده لینک
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning rounded-3" title="ویرایش">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info rounded-3" title="جزئیات">
+                                            <i class="bi bi-info-circle"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger rounded-3" title="حذف">
+                                            <i class="bi bi-trash3"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-muted">هیچ تبلیغی ثبت نشده است.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+﻿@model List<TeamTaskManager.Models.Project>
+@using Microsoft.AspNetCore.Http
+@{ ViewData["Title"] = "پروژه‌های من"; var role = Context.Session.GetString("UserRole"); }
+
+<section class="container my-5">
+    <h2 class="text-center mb-4">پروژه‌های من</h2>@if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info text-center">پروژه‌ای یافت نشد.</div>
+    }
+    else
+    {
+<div class="mb-4 text-start">
+    <button onclick="history.back()" class="btn btn-outline-secondary rounded-pill">
+        ⬅ بازگشت   
+    </button>
+</div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+            @foreach (var project in Model)
+            {
+                <div class="col">
+                    <div class="card border-success border-2 shadow rounded-4 h-100">
+
+                        <img src="@(string.IsNullOrEmpty(project.CoverImagePath) ? Url.Content("~/assets/img/default-cover.jpg") : Url.Content(project.CoverImagePath))" class="card-img-top rounded-top-4" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">@project.Title</h5>
+                            <p class="card-text text-muted small">@project.Description</p>
+                            <p class="mb-1">
+                                <strong>نوع:</strong> @project.Type |
+                                <strong>قیمت:</strong> @(project.Price == 0 ? "رایگان" : project.Price.ToString("N0") + " تومان")
+                            </p>
+                            <p class="mb-2">
+                                <strong>وضعیت:</strong>
+                                @if (project.IsActive)
+                                {
+                                    <span class="badge bg-success">فعال</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">غیرفعال</span>
+                                }
+                            </p>
+
+                            <div class="d-flex flex-wrap gap-2 mt-3">
+                                @if (role == "Admin")
+                                {
+                                    <a asp-action="Edit" asp-route-id="@project.Id" class="btn btn-outline-warning btn-sm rounded-pill flex-fill">✏ ویرایش</a>
+                                    <a asp-action="Delete" asp-route-id="@project.Id" class="btn btn-outline-danger btn-sm rounded-pill flex-fill">🗑 حذف</a>
+                                    <a asp-action="Details" asp-route-id="@project.Id" class="btn btn-outline-primary btn-sm rounded-pill flex-fill">👁 جزئیات</a>
+                                }
+                                else
+                                {
+                                    <a asp-action="Details" asp-route-id="@project.Id" class="btn btn-outline-primary btn-sm rounded-pill flex-fill">👁 جزئیات</a>
+
+                                    @if (project.Price > 0)
+                                    {
+                                        @if (project.IsActive)
+                                        {
+                                            <a asp-action="StartPayment" asp-controller="Projects" asp-route-id="@project.Id" class="btn btn-outline-success btn-sm rounded-pill flex-fill">💳 پرداخت</a>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-outline-secondary btn-sm rounded-pill flex-fill" disabled>🚫 پرداخت غیرفعال</button>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="ActivateFree" asp-controller="Projects" asp-route-id="@project.Id" class="btn btn-outline-warning btn-sm rounded-pill flex-fill">🎁 فعال‌سازی رایگان</a>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+</section>

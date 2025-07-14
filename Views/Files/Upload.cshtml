@@ -1,0 +1,59 @@
+﻿@*@{
+        ViewData["Title"] = "آپلود فایل";
+        var projectId = ViewBag.ProjectId as int?;
+    }
+
+    <h3>آپلود فایل برای پروژه شماره @projectId</h3>
+
+    <form asp-action="Upload" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="projectId" value="@projectId" />
+        <div class="mb-3">
+            <label for="uploadFile" class="form-label">انتخاب فایل</label>
+            <input type="file" name="uploadFile" id="uploadFile" class="form-control" required />
+        </div>
+        <button type="submit" class="btn btn-primary">آپلود</button>
+        <a asp-action="Index" asp-route-projectId="@projectId" class="btn btn-secondary ms-2">بازگشت</a>
+    </form>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger mt-3">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <p>@error.ErrorMessage</p>
+            }
+        </div>
+    }*@
+
+@model TeamTaskManager.Models.ProjectFile // مدل فایل پروژه
+
+@{
+    ViewData["Title"] = "آپلود فایل";
+    var projectId = ViewBag.ProjectId as int?;
+}
+
+<div class="container mt-5 mb-5" style="max-width: 600px;">
+    <h3 class="text-center">آپلود فایل برای پروژه شماره @projectId</h3>
+
+    <form asp-action="Upload" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="ProjectId" value="@projectId" /> <!-- شناسه پروژه -->
+
+        <div class="mb-3">
+            <label for="uploadFile" class="form-label">انتخاب فایل</label>
+            <input type="file" name="uploadFile" id="uploadFile" class="form-control" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">آپلود</button>
+        <a asp-action="Index" asp-route-projectId="@projectId" class="btn btn-secondary ms-2">بازگشت</a>
+    </form>
+
+    @if (!ViewData.ModelState.IsValid) // نمایش خطاهای اعتبارسنجی
+    {
+        <div class="alert alert-danger mt-3">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <p>@error.ErrorMessage</p>
+            }
+        </div>
+    }
+</div>

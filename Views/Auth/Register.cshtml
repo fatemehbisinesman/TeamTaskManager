@@ -1,0 +1,73 @@
+﻿@model TeamTaskManager.Models.User
+
+
+<section class=" my-5 px-3">
+    <div class="row align-items-center justify-content-center">
+        <!-- فرم سمت چپ با باکس و سایه -->
+        <div class="col-md-6">
+            <div class="p-4 bg-white">
+                <h2 class="mb-4 text-end">ثبت‌نام</h2>
+
+                <form asp-action="Register" method="post" class="text-end">
+                    <div class="form-group mb-3">
+                        <label>نام کامل</label>
+                        <input asp-for="FullName" class="form-control" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label>ایمیل</label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label>رمز عبور</label>
+                        <input asp-for="Password" class="form-control" type="password" minlength="6" required />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    @section Scripts {
+                        <script>
+                            document.querySelector('input[name="Password"]').addEventListener('input', function () {
+                                const pwd = this.value;
+                                const valid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/.test(pwd);
+
+                                if (!valid) {
+                                    this.setCustomValidity("رمز باید شامل حرف بزرگ، کوچک، عدد و نماد خاص باشد");
+                                } else {
+                                    this.setCustomValidity("");
+                                }
+                            });
+                        </script>
+                    }
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Role">نقش</label>
+                        <select asp-for="Role" class="form-control">
+                            <option value="User">کاربر عادی</option>
+                            <option value="Admin">مدیر</option>
+                        </select>
+                        <span asp-validation-for="Role" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mt-3">
+                        <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 mt-3">ثبت‌نام</button>
+
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+        <div class="alert alert-success mt-3">@TempData["SuccessMessage"]</div>}
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+        <div class="alert alert-danger mt-3">@TempData["ErrorMessage"]</div>}
+                </form>
+            </div>
+        </div>
+
+        <!-- عکس سمت راست -->
+        <div class="col-md-6 d-none d-md-block">
+            <img src="~/assets/img/portfolio/web2.jpg" alt="تصویر ثبت‌نام" class="img-fluid rounded shadow blur-wrapper " />
+        </div>
+    </div>
+</section>
